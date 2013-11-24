@@ -1,0 +1,14 @@
+*.class
+*.pyc
+*.pyo
+
+.project
+
+*.db
+.DS_Store
+._*
+
+platforms/
+
+node_modules/
+_build*

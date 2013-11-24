@@ -1,0 +1,30 @@
+<style type="text/css">
+	
+</style>
+<script type="text/x-handlebars-template" id="tpl:planner">
+	<form id="planner">
+		<p>
+			<h1>New trip</h1>
+			<button id="done">Done</button>
+		</p>
+		<p>
+			<input type="text" id="from" name="from" value="{{from}}" data-coord="{{fromCoord}}" placeholder="From" autofocus>
+		</p>
+		<p>
+			<input type="text" id="to" name="to" value="{{to}}" data-coord="{{toCoord}}" placeholder="To">
+		</p>
+		<p>
+			<input type="datetime-local" id="when" name="when" value="{{ISOtime when}}">
+			<label for="arrive">Arrive</label>
+			<input type="radio" id="arrive" name="arrdep" value="arrive" {{#if arrive}}checked{{/if}}>
+			<label for="depart">Depart</label>
+			<input type="radio" id="depart" name="arrdep" value="depart" {{#unless arrive}}checked{{/unless}}>
+		</p>
+		<p>
+			<button id="plan">Plan trip</button>
+		</p>
+	</form>
+</script>
+<script type="text/javascript">
+	app.loadTemplate('planner');
+</script>

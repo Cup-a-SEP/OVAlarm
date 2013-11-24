@@ -1,0 +1,31 @@
+<style type="text/css">
+	/* Placeholder obviously */
+	#loader {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		
+		background-color: rgba(0,0,0,.5);
+		margin: auto auto;
+	}
+
+	#loader div {
+		position: fixed;
+		font-size: 300%;
+		text-align: center;
+		width: 100%;
+		color: Black;
+		text-shadow: White 2px 2px;
+		padding-top: 49%;
+	}
+</style>
+<script type="text/x-handlebars-template" id="tpl:loader">
+	<div id="loader">
+		<div>Loading...</div>
+	</div>
+</script>
+<script type="text/javascript">
+	app.loadTemplate('loader');
+</script>

@@ -1,0 +1,62 @@
+<style type="text/css">
+	.alarm:before {
+		content: "\0231A\020";
+	}
+
+	.past .arrival:before   { content: "arrived "; }
+	      .arrival:before   { content: "arrives "; }
+	.past .departure:before { content: "departed "; }
+	      .departure:before { content: "departs "; }
+	
+	.past {
+		opacity: .5;
+	}
+	
+	.current {
+		border-left: 2px solid Black;
+		padding-left: 1.5em;
+		margin-left: 1.5em;
+	}
+</style>
+<script type="text/x-handlebars-template" id="tpl:itinerary">
+	<section id="itinerary">
+	{{~#each legs ~}}
+	
+	{{#if mode}}
+		<div id="leg{{index}}" class="leg" data-time="{{./time}}">
+			<h2>{{type}} richting {{headsign}}</h2>
+			<p>{{mode}}<p>
+		</div>
+	{{else}}
+	{{#if arrival}}
+		<div id="arrive{{index}}" class="place" data-time="{{./time}}">
+			<h2>{{time time}} {{place}}</h2>
+			<p><span class="arrival">{{timing arrival}}</span> {{> alarmButton}}</p>
+		</div>
+	{{else}}
+		<div id="depart{{index}}" class="place" data-time="{{./time}}">
+			<h2>{{time time}} {{place}}</h2>
+			<p><span class="departure">{{timing departure}}</span> {{> alarmButton}}<p>
+		</div>
+	{{/if}}
+	{{/if}}
+	
+	{{~/each~}}
+	</section>
+</script>
+<script type="text/x-handlebars-template" id="tpl:alarmButton">
+	<button class="alarm{{#if alarm}} set{{/if}}">
+		{{~#if alarm}}{{duration alarm}} before{{else}}+{{/if~}}
+	</button>
+</script>
+<script type="text/x-handlebars-template" id="tpl:alarmSetting">
+	<fieldset id="alarm-setting">
+		<input type="range" id="delay" name="delay" value="{{delay}}" min="0" max="60">
+		<button id="remove">Remove</button>
+	</fieldset>
+</script>
+<script type="text/javascript">
+	app.loadPartialTemplate('alarmButton');
+	app.loadTemplate('itinerary');
+	app.loadTemplate('alarmSetting');
+</script>
