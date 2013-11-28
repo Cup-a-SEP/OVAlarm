@@ -1,13 +1,12 @@
 <style type="text/css">
-	.alarm:before {
-		content: "\0231A\020";
-	}
+	.alarm:before { content: "\0231A  "; }
+	.set:after    { content: " before"; }
 
 	.past .arrival:before   { content: "arrived "; }
 	      .arrival:before   { content: "arrives "; }
 	.past .departure:before { content: "departed "; }
 	      .departure:before { content: "departs "; }
-	
+
 	.past {
 		opacity: .5;
 	}
@@ -16,6 +15,11 @@
 		border-left: 2px solid Black;
 		padding-left: 1.5em;
 		margin-left: 1.5em;
+	}
+
+	#alarm-setting {
+		position: fixed;
+		background-color: White;
 	}
 </style>
 <script type="text/x-handlebars-template" id="tpl:itinerary">
@@ -45,12 +49,12 @@
 	</section>
 </script>
 <script type="text/x-handlebars-template" id="tpl:alarmButton">
-	<button class="alarm{{#if alarm}} set{{/if}}">
-		{{~#if alarm}}{{duration alarm}} before{{else}}+{{/if~}}
+	<button class="alarm{{#if alarm}} set{{/if}}" data-id="{{#if arrival}}a{{else}}d{{/if}}{{index}}">
+		{{~#if alarm}}{{duration alarm}}{{else}}+{{/if~}}
 	</button>
 </script>
 <script type="text/x-handlebars-template" id="tpl:alarmSetting">
-	<fieldset id="alarm-setting">
+	<fieldset id="alarm-setting" data-id="{{id}}">
 		<input type="range" id="delay" name="delay" value="{{delay}}" min="0" max="60">
 		<button id="remove">Remove</button>
 	</fieldset>

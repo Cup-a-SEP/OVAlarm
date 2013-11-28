@@ -22,7 +22,7 @@
 			var mins = Math.round(seconds % 3600 / 60);
 			return hours + ' hours' + (mins ? ' and ' + mins + (mins == 1 ? ' minute' : ' minutes') : '');
 		}
-		else if (seconds >= 120) /* past two minutes */
+		else if (seconds >= 120 || !(seconds-0)) /* past two minutes */
 		{
 			var mins = Math.round(seconds / 60);
 			return mins + ' minutes';

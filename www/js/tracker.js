@@ -32,6 +32,11 @@
 					app.newTrip();
 					app.history.pop();
 				});
+
+				$('.alarm').click(function()
+				{
+					tracker.editAlarm($(this).attr('data-id'));
+				});
 			});
 	}
 
@@ -72,7 +77,6 @@
 			tracker.updateProgress();
 			tracker.updateTimes();
 		}
-		console.log('pulse');
 	}
 
 	/** Sets the update rate for the tracker (0 to turn it off completely). */
@@ -92,6 +96,60 @@
 			else
 				poll_id = undefined, poll_speed = 0;
 		}
+	}
+
+	/** Open the alarm settings window. */
+	tracker.editAlarm = function editAlarm(id)
+	{
+		closeAlarmSettings();
+
+		// Defaults
+		if (!(id in app.storage.alarms))
+			edit(600);
+		
+		function edit(delay)
+		{
+			app.storage.alarms[id] = delay;
+			$('.alarm[data-id=' + id + ']')
+				.addClass('set')
+				.text(app.formatDuration(delay));
+		}
+
+		app.page
+			.append(app.templates.alarmSetting(
+			{
+				id: id,
+				delay: app.storage.alarms[id] / 60
+			}))
+			.ready(function()
+			{
+				var button = $('.alarm[data-id=' + id + ']');
+				$('#alarm-setting')
+					.css('top', button.offset().top + button.outerHeight());
+
+				$('#remove').click(function()
+				{
+					tracker.removeAlarm(id);
+				});
+
+				$('#delay').change(function()
+				{
+					edit($('#delay').val() * 60);
+				});
+
+				$('#itinerary,#info,#menu').mouseup(closeAlarmSettings);
+			});
+	}
+
+	/** Removes the alarm setting (and window). */
+	tracker.removeAlarm = function removeAlarm(id)
+	{
+		delete app.storage.alarms[id];
+		$('.set[data-id=' + id + ']')
+			.removeClass('set')
+			.text('+');
+
+		closeAlarmSettings();
 	}
 
 	function processItinerary(it)
@@ -118,7 +176,8 @@
 				index: i,
 				time: it.legs[i].startTime,
 				place: it.legs[i].from.name,
-				departure: (it.legs[i].startTime - now) / 1000
+				departure: (it.legs[i].startTime - now) / 1000,
+				alarm: app.storage.alarms['d'+i]
 			});
 
 			// Transit leg
@@ -137,11 +196,18 @@
 				index: i,
 				time: it.legs[i].endTime,
 				place: it.legs[i].to.name,
-				arrival: (it.legs[i].endTime - now) / 1000
+				arrival: (it.legs[i].endTime - now) / 1000,
+				alarm: app.storage.alarms['a'+i]
 			});
 		}
 
 		return out;
+	}
+
+	function closeAlarmSettings()
+	{
+		$('#alarm-setting').remove();
+		$('#itinerary,#info,#menu').off('mouseup', closeAlarmSettings);
 	}
 
 })(jQuery, window.app = window.app || {});
