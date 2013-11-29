@@ -9,6 +9,7 @@
 ._*
 
 platforms/
+plugins/android.json
 
 node_modules/
 _build*

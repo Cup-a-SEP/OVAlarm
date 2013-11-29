@@ -50,4 +50,5 @@
     <access origin="http://127.0.0.1*" />
     <access origin="http://bag42.nl*" />
     <access origin="http://opentripplanner.nl/otp-rest-servlet/ws*" />
+    <content src="index.html" />
 </widget>
