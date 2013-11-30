@@ -23,24 +23,37 @@
 			.append(app.templates.menu())
 			.ready(function()
 			{
-				tracker.updateProgress();
-				tracker.updateTimes();
+				tracker.pollUpdates();
 
 				$('#new').click(function()
 				{
-					delete app.storage.trip;
 					app.newTrip();
-					app.history.pop();
 				});
 
 				$('.alarm').click(function()
 				{
 					tracker.editAlarm($(this).attr('data-id'));
 				});
+
+				$('#itinerary')
+					.on('sleep', function(e)
+					{
+						$(e.target).data('trip', app.storage.trip);
+						delete app.storage.trip;
+					})
+					.on('wake', function(e)
+					{
+						app.storage.trip = $(e.target).data('trip');
+						tracker.pollUpdates();
+					})
+					.on('die', function()
+					{
+						delete app.storage.trip;
+					});
 			});
 	}
 
-	/** Updates the 'playlist' */
+	/** Updates the 'playlist' (used by poll) */
 	tracker.updateProgress = function updateProgress()
 	{
 		var now = new Date().getTime();
@@ -55,46 +68,34 @@
 		elements.not('.past').first().addClass('current');
 	}
 
-	/** Updates the 'countdown' */
+	/** Updates the 'countdown' (used by poll). Returns the least duration. */
 	tracker.updateTimes = function updateTimes()
 	{
 		var now = new Date().getTime();
 		var elements = $('.place');
+		var least = Infinity; // Least duration
+
 		elements.each(function()
 		{
 			var timing = $(this).attr('data-time') - now;
+			least = Math.min(Math.abs(timing), least);
+
 			$(this)
 				.find('.arrival,.departure')
 				.text(app.formatTiming(timing / 1000));
 		});
+
+		return least;
 	}
 
-	/** Update tracker interface if present. */
+	/** Makes the tracker information update dynamically. (stops when itinerary element vanishes) */
 	tracker.pollUpdates = function pollUpdates()
 	{
 		if ($('#itinerary').length)
 		{
 			tracker.updateProgress();
-			tracker.updateTimes();
-		}
-	}
-
-	/** Sets the update rate for the tracker (0 to turn it off completely). */
-	var poll_speed, poll_id;
-	tracker.pollSpeed = function setPollSpeed(speed)
-	{
-		if (speed === undefined)
-			return poll_speed;
-
-		if (poll_speed != speed)
-		{
-			if (poll_id)
-				clearInterval(poll_id);
-
-			if (speed)
-				poll_id = setInterval(tracker.pollUpdates, poll_speed = speed);
-			else
-				poll_id = undefined, poll_speed = 0;
+			var least = tracker.updateTimes();
+			setTimeout(pollUpdates, Math.max(Math.min(least / 2, 60e3), 1e3));
 		}
 	}
 
@@ -103,7 +104,7 @@
 	{
 		closeAlarmSettings();
 
-		// Defaults
+		// Defaults (10 minutes)
 		if (!(id in app.storage.alarms))
 			edit(600);
 		

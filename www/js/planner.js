@@ -3,20 +3,52 @@
 	var planner = (app.planner = app.planner || {});
 
 	/** Opens the planner in a new page (optionally with specified values). */
-	app.newTrip = function newTrip(defaults)
+	app.newTrip = function newTrip(request)
 	{
-		defaults = defaults || { when: Date() };
+		if (request)
+			app.storage.request = request;
+		else
+		{
+			delete app.storage.request;
+			delete app.storage.results;
+		}
+
+		request = request || { when: Date() };
 
 		app.newPage();
 		app.page
 			.append(app.templates.bar())
-			.append(app.templates.planner(defaults))
+			.append(app.templates.planner(request))
 			.ready(function()
 			{
 				$('#plan').click(function()
 				{
 					app.planTrip();
 					return false;
+				});
+
+				$('#planner input').on('change', function(e)
+				{
+					// Save old form values to history
+					newTrip(app.storage.request);
+					if (app.storage.results)
+						planner.showResults(app.storage.results);
+					app.pageSwap();
+
+					// Save new form values to storage
+					app.storage.request = planner.getValues();
+				});
+
+				$('#planner').on('wake', function()
+				{
+					app.storage.request = planner.getValues();
+					if ($('#results').length)
+						app.storage.results = $('#results').data('otp');
+					else
+						delete app.storage.results;
+				}).on('sleep', function()
+				{
+					$('#results').data('otp', app.storage.results);
 				});
 
 				addAddressResolver($('#from'));
@@ -41,7 +73,9 @@
 			arriveBy: values.arrive
 		}).done(function(results)
 		{
+			app.newTrip(planner.getValues());
 			planner.showResults(results);
+			app.storage.results = results;
 			app.loader.hide();
 		}).fail(function(errorCode, errorMessage)
 		{
@@ -74,7 +108,6 @@
 	planner.showResults = function showResults(results)
 	{
 		if ($('#feedback').length) $('#results').remove();
-		app.newTrip(planner.getValues());
 		app.page
 			.append(app.templates.results(
 			{

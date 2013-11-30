@@ -86,8 +86,10 @@
 			app.page
 				.empty()
 				.append($('<style>').text('body { background-color: Black; color: White; }'
-				                         +'h1 { padding-top: 49%; text-align: center; }'))
-				.append($('<h1>').text('App has been closed'));
+				                         +'h1,h4 { text-align: center; }'
+				                         +'h1 { padding-top: 35%; }'))
+				.append($('<h1>').text('App has been closed'))
+				.append($('<h4>').text('Press <F5> to restart the app.'));
 		})();
 	}
 
@@ -97,17 +99,34 @@
 	/** Saves the current page in the history and clears it. */
 	app.newPage = function newPage()
 	{
-		app.history.push(app.page.children().detach());
+		app.history.push(app.page.children().trigger('sleep').detach());
 	}
 
 	/** Clears the current page and pops the last one from the history.
 		(Closes the app when the history is empty) */
 	app.pageBack = function pageBack()
 	{
+		app.page.children().trigger('die');
 		if (app.history.length)
-			app.page.empty().append(app.history.pop());
+		{
+			app.page
+				.empty()
+				.append(app.history.pop())
+				.children().trigger('wake');
+		}
 		else
 			app.exitApp();
+	}
+
+	/** Saves the current page in the history and restores the last page. */
+	app.pageSwap = function pageSwap()
+	{
+		if (app.history.length)
+		{
+			var page = app.page.children().detach();
+			app.page.append(app.history.pop());
+			app.history.push(page);
+		}
 	}
 
 	$(function()

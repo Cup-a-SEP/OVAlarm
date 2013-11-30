@@ -5,6 +5,39 @@
 	var gui = $.Deferred();     // GUI ready
 	var data = $.Deferred();    // Data ready
 
+	/** Opens the app interface. */
+	app.startApp = function startApp()
+	{
+		var request = app.storage.request;
+		var results = app.storage.results;
+		var trip = app.storage.trip;
+
+		app.newTrip();
+
+		if (request)
+			$('main').ready(function()
+			{
+				app.newTrip(request);
+			});
+
+		if (results)
+			$('main').ready(function()
+			{
+				app.newTrip(request);
+				// Fake OTP request result
+				app.planner.showResults(results);
+				app.storage.results = results;
+			});
+		
+		if (trip)
+			$('main').ready(function()
+			{
+				app.trackTrip(trip);
+			});
+
+		app.history.shift();
+	}
+
 	// App closed event
 	$(document).one('appexit', function()
 	{
@@ -14,8 +47,8 @@
 	// App done loading event
 	$(document).on('appready', function()
 	{
+		app.startApp();
 		app.loader.hide();
-		app.tracker.pollSpeed(10000); // Not the best place to set this...
 	});
 
 	// Set up device events
@@ -28,15 +61,11 @@
 		
 		$(document).on('pause', function()
 		{
-			$(document).trigger('appexit');
+			app.exitApp();
 		});
 		
 		device.resolve();
 	});
-
-	// Also trigger deviceready when app is simulated in a browser
-	if (!('app' in navigator))
-		device.resolve();
 
 	// Load data (async)
 	setTimeout(function()
@@ -66,12 +95,14 @@
 			'tpl/menu.html'
 		]).done(function()
 		{
-			if ('trip' in app.storage)
-				app.trackTrip(app.storage.trip);
-			else
-				app.newTrip();
-			app.history.pop();
 			gui.resolve();
+
+			// Fake things when the app is simulated in a browser
+			if (!('app' in navigator))
+			{
+				$(document).trigger('deviceready');
+				debug();
+			}
 		});
 
 	});
@@ -80,5 +111,21 @@
 	{
 		$(document).trigger('appready');
 	});
+
+	function debug()
+	{
+		$('main')
+			.after($('<section>')
+				.attr('id', 'debug')
+				.append('Debug: ')
+				.append($('<button>')
+					.text('Back')
+					.click(function() { $(document).trigger('backbutton'); }))
+				.append($('<button>')
+					.text('Pause')
+					.click(function() { $(document).trigger('pause'); })));
+
+		$(document).on('appexit', function() { $('#debug').remove(); })
+	}
 
 })(jQuery, window.app = window.app || {})
