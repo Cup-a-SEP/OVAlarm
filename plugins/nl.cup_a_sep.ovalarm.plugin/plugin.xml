@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:rim="http://www.blackberry.com/ns/widgets"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="nl.cup_a_sep.ovalarm.plugin"
+    version="0.2.4">
+    <name>OVAlarmService</name>
+    <description>OVAlarm background service plugin</description>
+    <license>LGPLv3</license>
+    <keywords>ovalarm,service</keywords>
+
+    <js-module src="www/backgroundService.js" name="CreateBackgroundService">
+        <clobbers target="CreateBackgroundService" />
+    </js-module>
+
+    <js-module src="www/service.js" name="service">
+        <clobbers target="app.service" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="OVAlarmService" >
+                <param name="android-package" value="nl.cup_a_sep.ovalarm.plugin.OVAlarmService"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/OVAlarmService.java" target-dir="src/nl/cup_a_sep/ovalarm/plugin" />
+        <source-file src="src/android/StatusBarNotification.java" target-dir="src/nl/cup_a_sep/ovalarm/plugin" />
+        <source-file src="src/android/StatusNotificationIntent.java" target-dir="src/nl/cup_a_sep/ovalarm/plugin" />
+        <source-file src="libs/android/backgroundserviceplugin-3.0.0.jar" target-dir="libs" />
+        <source-file src="res/android/drawable-hdpi/notification.png" target-dir="res/drawable-hdpi" />
+        <source-file src="res/android/drawable-mdpi/notification.png" target-dir="res/drawable-mdpi" />
+        <source-file src="res/android/drawable-xhdpi/notification.png" target-dir="res/drawable-xhdpi" />
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <service android:name="nl.cup_a_sep.ovalarm.plugin.OVAlarmService">
+                <intent-filter>
+                    <action android:name="nl.cup_a_sep.ovalarm.plugin.OVAlarmService" />
+                </intent-filter>
+            </service>
+            <receiver android:name="com.red_folder.phonegap.plugin.backgroundservice.BootReceiver">
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.VIBRATE" />
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+        </config-file>
+    </platform>
+
+</plugin>
