@@ -54,7 +54,7 @@
 				addAddressResolver($('#from'));
 				addAddressResolver($('#to'));
 			});
-	}
+	};
 
 	/** Plans a trip using the planner form data (the form must be there).*/
 	app.planTrip = function planTrip()
@@ -81,8 +81,8 @@
 		{
 			planner.showError(errorMessage /*debug:*/ + ' (' + errorCode + ')');
 			app.loader.hide();
-		})
-	}
+		});
+	};
 
 	/** Extracts planner values from the current form. */
 	planner.getValues = function getValues()
@@ -95,14 +95,14 @@
 			when: $('#when').val(),
 			arrive: $('#arrive').is(':checked')
 		};
-	}
+	};
 
 	/** Displays an error message. */
 	planner.showError = function showError(error)
 	{
 		if ($('#feedback').length) $('#results').remove();
 		app.page.append(app.templates.results({ error: error }));
-	}
+	};
 
 	/** Displays planner results. */
 	planner.showResults = function showResults(results)
@@ -123,7 +123,7 @@
 					});
 				});
 			});
-	}
+	};
 
 	function processItinerary(it)
 	{

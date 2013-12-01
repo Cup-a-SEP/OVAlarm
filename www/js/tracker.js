@@ -51,7 +51,7 @@
 						delete app.storage.trip;
 					});
 			});
-	}
+	};
 
 	/** Updates the 'playlist' (used by poll) */
 	tracker.updateProgress = function updateProgress()
@@ -66,7 +66,7 @@
 
 		$('#itinerary .current').removeClass('current');
 		elements.not('.past').first().addClass('current');
-	}
+	};
 
 	/** Updates the 'countdown' (used by poll). Returns the least duration. */
 	tracker.updateTimes = function updateTimes()
@@ -86,7 +86,7 @@
 		});
 
 		return least;
-	}
+	};
 
 	/** Makes the tracker information update dynamically. (stops when itinerary element vanishes) */
 	tracker.pollUpdates = function pollUpdates()
@@ -97,7 +97,7 @@
 			var least = tracker.updateTimes();
 			setTimeout(pollUpdates, Math.max(Math.min(least / 2, 60e3), 1e3));
 		}
-	}
+	};
 
 	/** Open the alarm settings window. */
 	tracker.editAlarm = function editAlarm(id)
@@ -140,7 +140,7 @@
 
 				$('#itinerary,#info,#menu').mouseup(closeAlarmSettings);
 			});
-	}
+	};
 
 	/** Removes the alarm setting (and window). */
 	tracker.removeAlarm = function removeAlarm(id)
@@ -151,7 +151,7 @@
 			.text('+');
 
 		closeAlarmSettings();
-	}
+	};
 
 	function processItinerary(it)
 	{
