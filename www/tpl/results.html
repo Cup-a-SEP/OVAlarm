@@ -1,28 +1,25 @@
-<style type="text/css">
-	
-</style>
+
 <script type="text/x-handlebars-template" id="tpl:results">
 	<section id="results">
 	{{#each results}}
-		<div>
+		<div class="result">
 			{{#each legs}}
 			{{#if mode}}
-			<dl class="leg">
-				<dt>{{mode mode}}</dt>
-				<dd>{{type}}</dd>
-				
-			</dl>
+			<div class="leg row">
+				<div class="col-xs-2 text-muted">{{mode mode}}</div>
+				<div class="col-xs-10">{{type}}</div>
+			</div>
 			{{else}}
-			<dl class="place">
-				<dt>{{time time}}</dt>
-				<dd>{{place}}</dd>
-			</dl>
+			<div class="place row">
+				<div class="col-xs-2 text-muted">{{time time}}</div>
+				<div class="col-xs-10">{{place}}</div>
+			</div>
 			{{/if}}
 			{{/each}}
-			<p>
-				{{duration duration}}, {{distance distance}}
-				<button id="track{{@index}}">Track trip</button>
-			</p>
+			<div class="row">
+				<div class="col-xs-8"><div class="btn disabled btn-fake">{{duration duration}}, {{distance distance}}</div></div>
+				<div class="col-xs-4"><button id="track{{@index}}" class="btn btn-link">Track trip</button><div>
+			</div>
 		</div>
 	{{else}}
 		<h3 id="feedback">{{#if error}}{{error}}{{else}}No route found.{{/if}}</h3>

@@ -1,30 +1,41 @@
-<style type="text/css">
-	
-</style>
 <script type="text/x-handlebars-template" id="tpl:planner">
-	<form id="planner">
-		<p>
-			<h1>New trip</h1>
-			<button id="done">Done</button>
-		</p>
-		<p>
-			<input type="text" id="from" name="from" value="{{from}}" data-coord="{{fromCoord}}" placeholder="From">
-		</p>
-		<p>
-			<input type="text" id="to" name="to" value="{{to}}" data-coord="{{toCoord}}" placeholder="To">
-		</p>
-		<p>
-			<input type="datetime-local" id="when" name="when" value="{{ISOtime when}}">
-			<label for="arrive">Arrive</label>
-			<input type="radio" id="arrive" name="arrdep" value="arrive" {{#if arrive}}checked{{/if}}>
-			<label for="depart">Depart</label>
-			<input type="radio" id="depart" name="arrdep" value="depart" {{#unless arrive}}checked{{/unless}}>
-		</p>
-		<p>
-			<button id="plan">Plan trip</button>
-		</p>
+	<form id="planner" role="form">
+		<div class="form-group">
+			<h4 class="text-center">New trip</h4>
+			<button id="done" class="btn btn-link pull-right">Done</button>
+		</div>
+
+		<div class="form-group">
+			<input type="text" id="from" class="form-control" name="from" value="{{from}}" data-coord="{{fromCoord}}" placeholder="From">
+		</div>
+		<div class="form-group">
+			<input type="text" id="to" class="form-control" name="to" value="{{to}}" data-coord="{{toCoord}}" placeholder="To">
+		</div>
+
+		<div class="form-group">
+			<div class="row">
+				<div class="col-xs-8">
+					<input type="datetime-local" id="when" class="form-control" name="when" value="{{ISOtime when}}">
+				</div>
+				<div class="col-xs-4">
+					<label for="arrive" class="radio-inline arrdep {{#if arrive}}active{{/if}}">Arrive
+						<input type="radio" id="arrive" class="form-control" name="arrdep" value="arrive" {{#if arrive}}checked{{/if}}>
+					</label>
+					<label for="depart" class="radio-inline arrdep {{#unless arrive}}active{{/unless}}">Depart
+						<input type="radio" id="depart" class="form-control" name="arrdep" value="depart" {{#unless arrive}}checked{{/unless}}>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<button id="plan" class="btn btn-primary btn-block">Plan trip</button>
+		</div>
+
+		<div class="tooltip-arrow-line"><div class="arrow"></div></div>
 	</form>
 </script>
+
 <script type="text/javascript">
 	app.loadTemplate('planner');
 </script>
