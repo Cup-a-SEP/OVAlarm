@@ -8,11 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
-//import com.phonegap.hello_world.R;
+import nl.cup-a-sep.ovalarm.R;
 
 public class StatusNotificationIntent {
     public static Notification buildNotification( Context context, CharSequence tag, CharSequence contentTitle, CharSequence contentText, int flag ) {
-        int icon = android.R.drawable.notification;
+        int icon = R.drawable.notification;
         long when = System.currentTimeMillis();
         Notification noti = new Notification(icon, contentTitle, when);
         noti.flags |= flag;
