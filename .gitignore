@@ -15,6 +15,6 @@ node_modules/
 _build*
 _run*
 
-!platforms/libs/backgroundserviceplugin-3.0.0.jar
-!platforms/src/nl/cup_a_sep/ovalarm/*
-!platforms/org/apache/cordova/statusBarNotification/*
+!platforms/android/libs/backgroundserviceplugin-3.0.0.jar
+!platforms/android/src/nl/cup_a_sep/ovalarm/*
+!platforms/android/src/org/apache/cordova/statusBarNotification/*
