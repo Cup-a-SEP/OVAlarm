@@ -1,0 +1,43 @@
+form#planner {
+	padding:0 10px;
+	#done {
+		// moved to the top with negative margin to not disrupt the center aligned text of the title
+		margin-top: -36px;
+		// moved to the right with negative margin to not disrupt form padding
+		margin-right:-10px;
+	}
+	.col-xs-8 {
+		padding-right: 10px;
+	}
+	.col-xs-4 {
+		padding:0;
+	}
+	label.arrdep {
+		margin:0;
+		padding: 7px 2px;
+		&.active {
+			font-weight: bold;
+		}
+	}
+	input[type="radio"] {
+		display: none;
+	}
+
+	.tooltip-arrow-line {
+		position: relative;
+		width: 100%;
+		border-top:rgb(221, 221, 221) 1px solid;
+		// modification of tooltip.less
+		.arrow {
+			position: absolute;
+			width: 0;
+  			height: 0;
+			border-color: transparent;
+  			border-style: solid;
+  			left:50%;
+			margin-left: -@tooltip-arrow-width;
+	    	border-width: @tooltip-arrow-width @tooltip-arrow-width 0;
+	    	border-top-color: @tooltip-arrow-color;
+		}
+	}
+}
