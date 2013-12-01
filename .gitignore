@@ -15,6 +15,11 @@ node_modules/
 _build*
 _run*
 
+
+#------------------------
+#The below lines don't work so the files were added with -f.
+#------------------------
 !platforms/android/libs/backgroundserviceplugin-3.0.0.jar
-!platforms/android/src/nl/cup_a_sep/ovalarm/*
-!platforms/android/src/org/apache/cordova/statusBarNotification/*
+!platforms/android/src/nl/cup_a_sep/ovalarm/
+!platforms/android/src/org/apache/cordova/statusBarNotification/
+!platforms/android/res/*/notification.png
