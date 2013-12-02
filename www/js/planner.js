@@ -76,6 +76,7 @@
 			app.newTrip(planner.getValues());
 			planner.showResults(results);
 			app.storage.results = results;
+			app.refreshAlarms();
 			app.loader.hide();
 		}).fail(function(errorCode, errorMessage)
 		{
@@ -168,7 +169,7 @@
 		return out;
 	}
 
-	// Note: this function could be a lot strickter removing all unused values...
+	// Note: this function could be a lot stricter removing all unused values...
 	function stripItinerary(plan, index)
 	{
 		return {

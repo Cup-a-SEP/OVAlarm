@@ -19,12 +19,12 @@
 			this.lat = lat-0;
 			this.long = long-0;
 		}
-	}
+	};
 
 	app.GeoCoord.prototype.toString = function toString()
 	{
 		return this.lat + ',' + this.long;
-	}
+	};
 
 	/** Request a list of possible locations based on the given address. (deferred) */
 	app.geoCode = function geoCode(address)
@@ -59,7 +59,7 @@
 		});
 
 		return def.promise();
-	}
+	};
 
 	function formatAddress(result)
 	{
