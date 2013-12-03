@@ -20,7 +20,7 @@
 */
 
 var exec = require('cordova/exec'),
-    CreateBackgroundService = require('./CreateBackgroundService'),
+    CreateBackgroundService = require('./backgroundService'),
     service = CreateBackgroundService('nl.cup_a_sep.ovalarm.OVAlarmService', require, exports, module);
 
 module.exports = service;
