@@ -54,7 +54,7 @@
 				addAddressResolver($('#from'));
 				addAddressResolver($('#to'));
 			});
-	}
+	};
 
 	/** Plans a trip using the planner form data (the form must be there).*/
 	app.planTrip = function planTrip()
@@ -76,13 +76,14 @@
 			app.newTrip(planner.getValues());
 			planner.showResults(results);
 			app.storage.results = results;
+			app.refreshAlarms();
 			app.loader.hide();
 		}).fail(function(errorCode, errorMessage)
 		{
 			planner.showError(errorMessage /*debug:*/ + ' (' + errorCode + ')');
 			app.loader.hide();
-		})
-	}
+		});
+	};
 
 	/** Extracts planner values from the current form. */
 	planner.getValues = function getValues()
@@ -95,14 +96,14 @@
 			when: $('#when').val(),
 			arrive: $('#arrive').is(':checked')
 		};
-	}
+	};
 
 	/** Displays an error message. */
 	planner.showError = function showError(error)
 	{
 		if ($('#feedback').length) $('#results').remove();
 		app.page.append(app.templates.results({ error: error }));
-	}
+	};
 
 	/** Displays planner results. */
 	planner.showResults = function showResults(results)
@@ -123,7 +124,7 @@
 					});
 				});
 			});
-	}
+	};
 
 	function processItinerary(it)
 	{
@@ -168,7 +169,7 @@
 		return out;
 	}
 
-	// Note: this function could be a lot strickter removing all unused values...
+	// Note: this function could be a lot stricter removing all unused values...
 	function stripItinerary(plan, index)
 	{
 		return {

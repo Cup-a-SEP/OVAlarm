@@ -1,201 +1,185 @@
-
-
-
-
-//OLD CODE TO BE ADAPTED
-
-
-
-/**
- * Foreground services as a counterpart for the services that run in the background
- * @namespace Service
- */
-var Service = {};
-
-/**
- * Alarm service: functionality for firing alarms.
- * @namespace Service.Alarm 
- */
-Service.Alarm = {};
-
-/**
- * Recalculates the alarms (should be called when tracked trip data or alarm settings have changed). 
- */
-Service.Alarm.refresh = function ServiceAlarmRefresh()
+(function($, app)
 {
 	
-	// Obtain the current trip details or fail.
-	var res = localStorage['OTP data'] && $.parseJSON(localStorage['OTP data']);
-	if (!res)
-		return;
-		
-	var alarms = localStorage['Alarm data'] && $.parseJSON(localStorage['Alarm data']);
-	if (!alarms)
-		return;
-		
-	var legs = res.itineraries[0].legs;
-
-	// Loop over all the alarms for updating
-	for (var i = 0; i < alarms.length; ++i) {
 	
+	/**
+	 * Recalculates the alarms (should be called when tracked trip data or alarm settings have changed). 
+	 */
+	app.refreshAlarms = function refreshAlarms()
+	{
+		
+		// Obtain the current trip details or fail.
+		var res = localStorage['OTP data'] && $.parseJSON(localStorage['OTP data']);
+		if (!res)
+			return;
+			
+		var alarms = localStorage['Alarm data'] && $.parseJSON(localStorage['Alarm data']);
+		if (!alarms)
+			return;
+			
+		var legs = res.itineraries[0].legs;
+	
+		// Loop over all the alarms for updating
+		for (var i = 0; i < alarms.length; ++i) {
+		
+			var alarmLeg = null;
+			while (legs.length) {
+				var thisleg = legs.shift;
+				if (thisleg.id == alarms[i].leg) {
+					alarmLeg = thisleg;
+					break;
+				}
+			}
+			if (alarmLeg == null) return false; //There is a serious error, so abort.
+			
+			// Calculate new time for alarm
+			alarms[i].time = alarms[i].leadTime + (alarmType == 'departure' ? alarmLeg.startTime : alarmLeg.endTime);
+	
+		}
+		
+		localStorage['Alarm data'] = $.toJSON(alarms);
+		
+		return alarms;
+	};
+	
+	/**
+	 * Check if an alarm would fire and fire it if so
+	 * @return {Number} The time of the next alarm that would fire (unix timestamp) or else Infinity
+	 */
+	app.checkAlarm = function checkAlarm()
+	{
+		var alarms = localStorage['Alarm data'] && $.parseJSON(localStorage['Alarm data']);
+		if (!alarms || !alarms.length)
+			return Infinity;
+		
+		var now = new Date().getTime();
+	
+		var nextAlarm = null
+		// Check each alarm (they are out of order)
+		for (var i = 0; i < alarms.length; ++i) {
+			var thisAlarm = alarms[i];
+			
+			// Check if the alarm should fire, and do so
+			if (thisAlarm.time <= now) {
+				
+				// Remove the item. Compensate the iterator variable.
+				alarms.splice(i--, 1);
+				
+				// Fire the alarm
+				app.fireAlarm(alarm);
+				
+				// Save our alarm set
+				localStorage['Alarm data'] = $.toJSON(alarms);
+	
+			} else {
+				
+				// If the alarm should not fire, then it might be the next alarm to fire.
+				if (thisAlarm.time < nextAlarm.time) {
+					nextAlarm = thisAlarm;
+				}
+			}
+		}
+	
+		return alarms.length ? nextAlarm.time : Infinity;
+	};
+	
+	/**
+	 * Sets a new alarm or changes the existing alarm
+	 * @param {String} leg - To which leg this alarm is related
+	 * @param {String} alarmType - Alarm type: {departure, arrival}.
+	 * @param {int} leadTime - The amount of time in seconds before the event that the alarm should sound
+	 */
+	app.setAlarm = function setAlarm(leg, alarmType, leadTime) {
+		
+		// Remove an earlier setting for this alarm if there is one
+		app.removeAlarm(leg, alarmType);
+		
+		
+		var alarmData = localStorage['OTP data'] && $.parseJSON(localStorage['OTP data']);
+	
+		// Gather trip data in order to calculate alarm time
+		var res = localStorage['OTP data'] && $.parseJSON(localStorage['OTP data']);
+		if (!res)
+			return;
+		
+		// Find the requested leg
+		var legs = res.itineraries[0].legs;
 		var alarmLeg = null;
 		while (legs.length) {
 			var thisleg = legs.shift;
-			if (thisleg.id == alarms[i].leg) {
+			if (thisleg.id == leg) {
 				alarmLeg = thisleg;
 				break;
 			}
 		}
-		if (alarmLeg == null) return false; //There is a serious error, so abort.
-		
-		// Calculate new time for alarm
-		alarms[i].time: alarms[i].leadTime + (alarmType == 'departure' ? alarmLeg.startTime : alarmLeg.endTime),
-
-	}
+		if (alarmLeg == null) return false;
+			
+			
+		// Calculate the new alarm time and push the alarm into the set
+		alarmData.push(
+				{
+					type: alarmType,
+					leadTime: leadTime,
+					time: leadTime + (alarmType == 'departure' ? alarmLeg.startTime : alarmLeg.endTime),
+					leg: leg
+				});
 	
-	localStorage['Alarm data'] = $.toJSON(alarms);
+		// Save our alarm set
+		localStorage['Alarm data'] = $.toJSON(alarmData);
 	
-	return alarms;
-};
-
-/**
- * Check if an alarm would fire and fire it if so
- * @return {Number} The time of the next alarm that would fire (unix timestamp) or else Infinity
- */
-Service.Alarm.check = function ServiceAlarmCheck()
-{
-	var alarms = localStorage['Alarm data'] && $.parseJSON(localStorage['Alarm data']);
-	if (!alarms || !alarms.length)
-		return Infinity;
+	};
 	
-	var now = new Date().getTime();
-
-	var nextAlarm = null
-	// Check each alarm (they are out of order)
-	for (var i = 0; i < alarms.length; ++i) {
-		var thisAlarm = alarms[i];
-		
-		// Check if the alarm should fire, and do so
-		if (thisAlarm.time <= now) {
-			
-			// Remove the item. Compensate the iterator variable.
-			alarms.splice(i--, 1);
-			
-			// Fire the alarm
-			Service.Alarm.Fire(alarm);
-			
-			// Save our alarm set
-			localStorage['Alarm data'] = $.toJSON(alarms);
-
-		} else {
-			
-			// If the alarm should not fire, then it might be the next alarm to fire.
-			if (thisAlarm.time < nextAlarm.time) {
-				nextAlarm = thisAlarm;
+	/**
+	 * Removes the alarm specified by the parameters
+	 * @param {String} leg - To which leg this alarm is related
+	 * @param {String} alarmType - Alarm type: {departure, arrival}.
+	 */
+	app.removeAlarm = function removeAlarm(leg, alarmType) {
+	
+		var alarmData = localStorage['OTP data'] && $.parseJSON(localStorage['OTP data']);
+	
+		// Find the requested alarm
+		for (var i = 0; i < alarmData.length; ++i) {
+			var thisAlarm = alarmData[i];
+			if (thisAlarm.leg == leg && thisAlarm.type == alarmType) {
+				
+				// Remove the item
+				alarmData.splice(i, 1);
+				
+				// Save our alarm set
+				localStorage['Alarm data'] = $.toJSON(alarmData);
+				return true;
 			}
 		}
-	}
-
-	return alarms.length ? nextAlarm.time : Infinity;
-};
-
-/**
- * Sets a new alarm or changes the existing alarm
- * @param {String} leg - To which leg this alarm is related
- * @param {String} alarmType - Alarm type: {departure, arrival}.
- * @param {int} leadTime - The amount of time in seconds before the event that the alarm should sound
- */
-Service.Alarm.set = function ServiceAlarmSet(leg, alarmType, leadTime) {
-	
-	// Remove an earlier setting for this alarm if there is one
-	Service.Alarm.remove(leg, alarmType);
-	
-	
-	var alarmData = localStorage['OTP data'] && $.parseJSON(localStorage['OTP data']);
-
-	// Gather trip data in order to calculate alarm time
-	var res = localStorage['OTP data'] && $.parseJSON(localStorage['OTP data']);
-	if (!res)
-		return;
-	
-	// Find the requested leg
-	var legs = res.itineraries[0].legs;
-	var alarmLeg = null;
-	while (legs.length) {
-		var thisleg = legs.shift;
-		if (thisleg.id == leg) {
-			alarmLeg = thisleg;
-			break;
-		}
-	}
-	if (alarmLeg == null) return false;
-		
-		
-	// Calculate the new alarm time and push the alarm into the set
-	alarmData.push(
-			{
-				type: alarmType,
-				leadTime: leadTime,
-				time: leadTime + (alarmType == 'departure' ? alarmLeg.startTime : alarmLeg.endTime),
-				leg: leg
-			});
-
-	// Save our alarm set
-	localStorage['Alarm data'] = $.toJSON(alarmData);
-
-};
-
-/**
- * Removes the alarm specified by the parameters
- * @param {String} leg - To which leg this alarm is related
- * @param {String} alarmType - Alarm type: {departure, arrival}.
- */
-Service.Alarm.remove = function ServiceAlarmRemove(leg, alarmType) {
-
-	var alarmData = localStorage['OTP data'] && $.parseJSON(localStorage['OTP data']);
-
-	// Find the requested alarm
-	for (var i = 0; i < alarmData.length; ++i) {
-		var thisAlarm = alarmData[i];
-		if (thisAlarm.leg == leg && thisAlarm.type == alarmType) {
-			
-			// Remove the item
-			alarmData.splice(i, 1);
-			
-			// Save our alarm set
-			localStorage['Alarm data'] = $.toJSON(alarmData);
-			return true;
-		}
-	}
-	return false;		
-};
-
-/**
- * Removes all alarms.
- * @param {String} leg - To which leg this alarm is related
- * @param {String} alarmType - Alarm type: {departure, arrival}.
- */
-Service.Alarm.removeAll = function ServiceAlarmRemoveAll() {
-	var alarmData = [];
-	
-	localStorage['Alarm data'] = $.toJSON(alarmData);
-};
-
-/**
- * Fires an alarm
- * @param {object} alarm - The alarm object to fire
- */
-Service.Alarm.fire = function ServiceAlarmFire(alarm) {
-		
-	var map = {
-		'departure':'Vertrek',
-		'arrival':'Aankomst'
+		return false;		
 	};
-	(navigator.notification ? navigator.notification : window).alert('De ' + map[alarm.type] + ' wekker ' ging af!', function(){}, 'Alarm');
+	
+	/**
+	 * Removes all alarms.
+	 * @param {String} leg - To which leg this alarm is related
+	 * @param {String} alarmType - Alarm type: {departure, arrival}.
+	 */
+	app.removeAllAlarms = function removeAllAlarms() {
+		var alarmData = [];
 		
-};
+		localStorage['Alarm data'] = $.toJSON(alarmData);
+	};
+	
+	/**
+	 * Fires an alarm
+	 * @param {object} alarm - The alarm object to fire
+	 */
+	app.fireAlarm = function fireAlarm(alarm) {
+			
+		var map = {
+			'departure':'Vertrek',
+			'arrival':'Aankomst'
+		};
+		(navigator.notification ? navigator.notification : window).alert('De ' + map[alarm.type] + ' wekker ging af!', function(){}, 'Alarm');
+			
+	};
 
-
+})(jQuery, window.app = window.app || {});
 
 //Actual communication with the background-service below.
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,19 +202,23 @@ Service.Alarm.fire = function ServiceAlarmFire(alarm) {
  */
 
 // Link to the native code through cordova
-cordova.define(	'cordova/plugin/fritsService',	function(require, exports, module) {    
+/*cordova.define(	'cordova/plugin/fritsService',	function(require, exports, module) {    
 	CreateBackgroundService('com.phonegap.hello_world.FritsService', require, exports, module);
 });
-var fritsService = cordova.require('cordova/plugin/fritsService');
-        	
+var fritsService = cordova.require('cordova/plugin/fritsService');*/
+// NOTE: if the plugin works this will be done automatically
+
 // Always start the service even if it isn't neede yet.
-document.addEventListener('deviceready', function() {
+$(document).on('deviceready', function() {
 	// Make an API call and start the service on success, else handle error.
-	fritsService.getStatus(	
-		function(r){startBackgroundService(r);},
-		function(e){handleError(e);}
-	);
-}, true);
+	if (!('service' in app))
+		console.warn('Background service plugin failed!');
+	else
+		app.service.getStatus(	
+			function(r){startBackgroundService(r);},
+			function(e){handleError(e);}
+		);
+});
 
 // Something to do when an API call succeeds. Do nothing in our case.
 function handleSuccess(data) {
@@ -245,20 +233,20 @@ function handleError(data) {
 
 // Start the service
 function startService() {
-	fritsService.startService(	function(r){handleSuccess(r);},
+	app.service.startService(	function(r){handleSuccess(r);},
 							function(e){handleError(e);});
 }
 
 // Enable the service timer with 20s interval
 function enableTimer() {
-	fritsService.enableTimer(	20000,
+	app.service.enableTimer(	20000,
 							function(r){handleSuccess(r);},
 							function(e){handleError(e);});
 }
  			
 // Register the service to start on reboot of the device
 function registerForBootStart() {
-	fritsService.registerForBootStart(	function(r){handleSuccess(r);},
+	app.service.registerForBootStart(	function(r){handleSuccess(r);},
 									function(e){handleError(e);});
 }
 
@@ -276,7 +264,7 @@ function setBackgroundAlarm(NextAlarmTimestamp, SBNTitle, SBNBody) {
 					"SBNTitle" : SBNTitle,
 					"SBNBody" : SBNBody
 				}; 
-	fritsService.setConfiguration(	config,
+	app.service.setConfiguration(	config,
 								function(r){handleSuccess(r);},
 								function(e){handleError(e);});
 }
@@ -289,7 +277,7 @@ function cancelBackgroundAlarm() {
 	var config = { 
 					"NextAlarmTimestamp" : '' + NextAlarmTimestamp,
 				}; 
-	fritsService.setConfiguration(	config,
+	app.service.setConfiguration(	config,
 								function(r){handleSuccess(r);},
 								function(e){handleError(e);});
 }

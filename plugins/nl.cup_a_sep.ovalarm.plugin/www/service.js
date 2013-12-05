@@ -20,7 +20,16 @@
 */
 
 var exec = require('cordova/exec'),
-    CreateBackgroundService = require('./CreateBackgroundService'),
+    CreateBackgroundService = require('./backgroundService'),
     service = CreateBackgroundService('nl.cup_a_sep.ovalarm.OVAlarmService', require, exports, module);
 
 module.exports = service;
+
+
+//Bovenstaande werkt niet (Issue #5). Code van vroeger:
+/*
+cordova.define(	'cordova/plugin/fritsService',	function(require, exports, module) {    
+	CreateBackgroundService('com.phonegap.hello_world.FritsService', require, exports, module);
+});
+var fritsService = cordova.require('cordova/plugin/fritsService');
+*/
