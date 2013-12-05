@@ -1,0 +1,12 @@
+{
+  "name": "OVAlarm",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "cheerio": "~0.12.2",
+    "grunt-contrib-less": "~0.8.1"
+  },
+  "dependencies": {
+    "cordova": "3.0.9"
+  }
+}
