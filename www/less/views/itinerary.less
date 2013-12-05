@@ -45,10 +45,10 @@ section#itinerary {
 		    }
 		    &.current {
 		    	h5 {
-		    		border-left: 2px solid rgb(35,108,157) !important;
+		    		border-left: 2px solid @mainhighlightcolor !important;
 		    	}
 		    	* {
-		    		color: rgb(35,108,157) !important;
+		    		color: @mainhighlightcolor !important;
 		    	}
 		    }
 		}
@@ -63,6 +63,7 @@ section#itinerary {
 			border-left: 2px solid transparent;
 			margin-left: 13px;
 			padding-left: 10px;
+			line-height: 24px;
 			.icon {
 				width: 22px;
 				height: 22px;
@@ -81,6 +82,7 @@ section#itinerary {
 				font-weight: normal;
 				color: rgb(119, 119, 119);
 				font-size: 14px;
+				line-height: 18px;
 				.icon {
 					width: 18px;
 					height: 18px;
@@ -91,10 +93,10 @@ section#itinerary {
     	}
     	&.current {
 	    	h4 {
-	    		border-left: 2px solid rgb(35,108,157);
-				color: rgb(35,108,157);
+	    		border-left: 2px solid @mainhighlightcolor;
+				color: @mainhighlightcolor;
 				.icon {
-					background-color: rgb(35,108,157);
+					background-color: @mainhighlightcolor;
 				}
 	    	}
 	    }

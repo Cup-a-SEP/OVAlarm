@@ -6,6 +6,7 @@
 @import "views/itinerary.less";
 @import "views/menu.less";
 
+@mainhighlightcolor: rgb(168, 35, 94);
 
 body {
 	background: rgb(245,240,236);
@@ -19,6 +20,10 @@ body {
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
 	background-color: rgb(172, 166, 160);
 	border-color: rgb(167, 160, 154);
+}
+
+.btn-link {
+	color: @mainhighlightcolor;
 }
 
 * {
