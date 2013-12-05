@@ -113,6 +113,7 @@
 			app.storage.alarms[id] = delay;
 			$('.alarm[data-id=' + id + ']')
 				.addClass('set')
+				.find('.alarm-content')
 				.text(app.formatDuration(delay));
 		}
 
@@ -148,6 +149,7 @@
 		delete app.storage.alarms[id];
 		$('.set[data-id=' + id + ']')
 			.removeClass('set')
+			.find('.alarm-content')
 			.text('+');
 
 		closeAlarmSettings();
@@ -162,24 +164,42 @@
 			legs: []
 		};
 		var now = new Date().getTime();
+		var stripStart, stripEnd, oddEven, legCount=0;
 
 		for (var i = 0; i < it.legs.length; ++i)
 		{
 			out.distance += it.legs[i].distance;
 
-			// Strip transfer legs, those are not interesting
-			if (i && i < it.legs.length - 1 && it.legs[i].mode == 'WALK')
-				continue;
+			stripStart = false;
+			stripEnd = false;
+			if (it.legs[i].mode == 'WALK') {
+				if (i && i < it.legs.length - 1) {
+					// Strip transfer legs, those are not interesting
+					continue;
+				} else if (i == 0) {
+					// strip  end of first walk leg, not interesting
+					stripEnd = true;
+				} else if (i === it.legs.length - 1) {
+					// strip start of last walk leg, not interesting
+					stripStart = true;
+				}
+			}
+			// as we strip legs, we need to have a seperate counter
+			oddEven = legCount%2 ? 'odd' : 'even';
+			legCount++;
 
 			// Start place
-			out.legs.push(
-			{
-				index: i,
-				time: it.legs[i].startTime,
-				place: it.legs[i].from.name,
-				departure: (it.legs[i].startTime - now) / 1000,
-				alarm: app.storage.alarms['d'+i]
-			});
+			if (!stripStart) {
+				out.legs.push(
+				{
+					index: i,
+					time: it.legs[i].startTime,
+					place: it.legs[i].from.name,
+					departure: (it.legs[i].startTime - now) / 1000,
+					alarm: app.storage.alarms['d'+i],
+					oddEven: oddEven
+				});
+			}
 
 			// Transit leg
 			out.legs.push(
@@ -188,18 +208,22 @@
 				time: it.legs[i].endTime,
 				mode: it.legs[i].mode,
 				type: it.legs[i].routeShortName || app.formatMode(it.legs[i].mode),
-				headsign: it.legs[i].headsign || it.legs[i].to.name
+				headsign: it.legs[i].headsign || it.legs[i].to.name,
+				oddEven: oddEven
 			});
 
 			// End place
-			out.legs.push(
-			{
-				index: i,
-				time: it.legs[i].endTime,
-				place: it.legs[i].to.name,
-				arrival: (it.legs[i].endTime - now) / 1000,
-				alarm: app.storage.alarms['a'+i]
-			});
+			if (!stripEnd) {
+				out.legs.push(
+				{
+					index: i,
+					time: it.legs[i].endTime,
+					place: it.legs[i].to.name,
+					arrival: (it.legs[i].endTime - now) / 1000,
+					alarm: app.storage.alarms['a'+i],
+					oddEven: oddEven
+				});
+			}
 		}
 
 		return out;

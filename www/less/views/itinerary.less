@@ -1,0 +1,103 @@
+section#itinerary {
+	margin-left: 0;
+	padding-left: 20px;
+	margin-bottom: 40px;
+	margin-top: 80px;
+	border-left: 2px solid transparent;
+
+	.text-muted {
+		font-weight: normal;
+		color: rgb(167, 160, 154);
+		font-size: 12px;
+		margin-top: 2px;
+	}
+	.arrival:before   { content: "arrival "; }
+	.departure:before { content: "departure "; }
+
+	.row {
+		margin-left: -35px;
+		&.even {
+			background: rgba(0,0,0, 0.05);
+		}
+		h5 {
+			border-left: 2px solid transparent;
+			padding-left: 11px;
+			margin-left: 13px;
+			margin-bottom: 0;
+			margin-top: 0;
+			font-weight: normal;
+			color: rgb(68, 68, 68);
+		}
+		&.place {
+			color: rgb(172, 172, 172);
+			font-size: 12px;
+			line-height: 26px;
+			
+			&.arrive {
+				padding-bottom:10px;
+			}
+			&.depart {
+				padding-top:10px;
+			}
+
+			&.past {
+				display: none;
+		    }
+		    &.current {
+		    	h5 {
+		    		border-left: 2px solid rgb(35,108,157) !important;
+		    	}
+		    	* {
+		    		color: rgb(35,108,157) !important;
+		    	}
+		    }
+		}
+	
+	}
+
+
+     	
+
+    .leg {
+		h4 {
+			border-left: 2px solid transparent;
+			margin-left: 13px;
+			padding-left: 10px;
+		}
+		&.past {
+    		h4 {
+    			margin-left: 13px;
+				font-weight: normal;
+				color: rgb(119, 119, 119);
+				font-size: 14px;
+    		}
+    	}
+    	&.current {
+	    	h4 {
+	    		border-left: 2px solid rgb(35,108,157);
+				color: rgb(35,108,157);
+	    	}
+	    }
+    }
+
+	button.alarm {
+		margin-top: 5px;
+		margin-right: 5px;
+		color: rgb(167, 160, 154);
+		&.set:after { content: " before"; }
+	}
+
+	#alarm-setting {
+		position: fixed;
+		left:10px;
+		right:10px;
+		background-color: white;
+		padding:10px;
+		box-shadow: rgb(221, 221, 221) 2px 2px 5px;
+	    -webkit-border-radius: 2px;
+		input[type="range"] {
+			width: 100%;
+			margin:5px 0;
+		}
+	}
+}
