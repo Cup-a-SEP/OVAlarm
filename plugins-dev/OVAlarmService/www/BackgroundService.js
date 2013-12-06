@@ -50,7 +50,7 @@ BackgroundService = function (serviceName) {
 BackgroundService.prototype.startService = function(successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'startService',      
 					[this.getServiceName()]);
 };
@@ -64,7 +64,7 @@ BackgroundService.prototype.startService = function(successCallback, failureCall
 BackgroundService.prototype.stopService = function(successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'stopService',      
 					[this.getServiceName()]);
 };
@@ -79,7 +79,7 @@ BackgroundService.prototype.stopService = function(successCallback, failureCallb
 BackgroundService.prototype.enableTimer = function(milliseconds, successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'enableTimer',      
 					[this.getServiceName(), milliseconds]);
 };
@@ -93,7 +93,7 @@ BackgroundService.prototype.enableTimer = function(milliseconds, successCallback
 BackgroundService.prototype.disableTimer = function(successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'disableTimer',      
 					[this.getServiceName()]);
 };
@@ -108,7 +108,7 @@ BackgroundService.prototype.disableTimer = function(successCallback, failureCall
 BackgroundService.prototype.setConfiguration = function(configuration, successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'setConfiguration',      
 					[this.getServiceName(), configuration]);
 };
@@ -122,7 +122,7 @@ BackgroundService.prototype.setConfiguration = function(configuration, successCa
 BackgroundService.prototype.registerForBootStart = function(successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'registerForBootStart',      
 					[this.getServiceName()]);
 };
@@ -136,7 +136,7 @@ BackgroundService.prototype.registerForBootStart = function(successCallback, fai
 BackgroundService.prototype.deregisterForBootStart = function(successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'deregisterForBootStart',      
 					[this.getServiceName()]);
 };
@@ -150,7 +150,7 @@ BackgroundService.prototype.deregisterForBootStart = function(successCallback, f
 BackgroundService.prototype.isRegisteredForBootStart = function(successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'isRegisteredForBootStart',      
 					[this.getServiceName()]);
 };
@@ -165,7 +165,7 @@ BackgroundService.prototype.isRegisteredForBootStart = function(successCallback,
 BackgroundService.prototype.getStatus = function(successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'getStatus',      
 					[this.getServiceName()]);
 };
@@ -179,7 +179,7 @@ BackgroundService.prototype.getStatus = function(successCallback, failureCallbac
 BackgroundService.prototype.runOnce = function(successCallback, failureCallback) { 
 	return exec(	successCallback,      
 					failureCallback,      
-					'OVAlarmService',      
+					'BackgroundServicePlugin',      
 					'runOnce',      
 					[this.getServiceName()]);
 };
