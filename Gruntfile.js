@@ -53,7 +53,7 @@ module.exports = function(grunt) {
             options: {
                 cwd: 'www',
                 htmlFile: 'index.html',
-                alwaysInclude: ['index.html', 'config.xml', 'img/**', 'js/config/**', 'fonts/**'],
+                alwaysInclude: ['index.html', 'config.xml', 'img/**', 'js/config/**', 'fonts/**', 'js/**', 'tpl/**'],
                 foldersToClean: ['platforms/android/assets/www/', 'platforms/ios/www/']
             }
         }
@@ -64,7 +64,7 @@ module.exports = function(grunt) {
 
     // Register Tasks
     grunt.registerTask('default', ['jshint']);
-    grunt.registerTask('after_prepare', ['clean_after_prepare', 'less']);
+    grunt.registerTask('after_prepare', ['less']);
 
     // TODO: Make this available on Github of Calendar42 and import from there
     grunt.registerTask('clean_after_prepare', 'After cordova prepare', function() {
