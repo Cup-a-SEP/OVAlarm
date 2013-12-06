@@ -6,19 +6,19 @@
 			{{#each legs}}
 			{{#if mode}}
 			<div class="leg row">
-				<div class="col-xs-2 text-muted">{{mode mode}}</div>
-				<div class="col-xs-10">{{type}}</div>
+				<div class="col-xs-3 text-muted">{{mode mode}}</div>
+				<div class="col-xs-9">{{type}}</div>
 			</div>
 			{{else}}
 			<div class="place row">
-				<div class="col-xs-2 text-muted">{{time time}}</div>
-				<div class="col-xs-10">{{place}}</div>
+				<div class="col-xs-3 text-muted">{{time time}}</div>
+				<div class="col-xs-9">{{place}}</div>
 			</div>
 			{{/if}}
 			{{/each}}
 			<div class="row">
 				<div class="col-xs-8"><div class="btn disabled btn-fake">{{duration duration}}, {{distance distance}}</div></div>
-				<div class="col-xs-4"><button id="track{{@index}}" class="btn btn-link">Track trip</button><div>
+				<div class="col-xs-4"><button id="track{{@index}}" class="btn btn-link pull-right">Track trip</button><div>
 			</div>
 		</div>
 	{{else}}
