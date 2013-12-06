@@ -43,7 +43,9 @@ Compile for the selected platform (Android for example)
 
 * `phonegap local build android`
 
-Next we add the plugin to the project
+After that delete all platform directories *other than* the one you are targetting from `/platforms`.
+
+Then we add the plugin to the project:
 
 * `phonegap local plugin add plugins-dev/OVAlarmService`
 
