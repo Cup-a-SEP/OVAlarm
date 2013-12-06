@@ -28,9 +28,32 @@ After that requires to install based on the package.json
 * `cd reponame`
 * `npm install`
 
+### Background Service
+
+The App is capable of triggering alarms even when it is not running in the foreground. It uses a cordova plugin to add this behaviour to phonegap. The plugin contains platform specific implementations and might require additional care when compiling for a certain platform. When the background service is not installed it will fail silently.
+
+## Installation
+
+(For a clean installation the following two step can be ommitted)
+
+* Remove the platform specific directories in `/platforms` (leaving `dummy`)
+* Remove all files and directries in `/plugins` (leaving `dummy`)
+
+Compile for the selected platform (Android for example)
+
+* `phonegap local build android`
+
+Next we add the plugin to the project
+
+*`phonegap local plugin add plugins-dev/OVAlarmService`
+
+To see if the installation has succeeded see if the config files in `/plaforms` contain the right sections and if the source files were copied to the right folders in `platforms/.../src/`.
+
+When changes were made to the plugin or the platform folders get mangled these steps might be required again.
+
 ## Contributors
 
-* Ferry
+* Ferry Timmers
 * Jasper Hartong
 * Jeroen
 

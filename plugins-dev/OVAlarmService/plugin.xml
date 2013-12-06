@@ -10,8 +10,8 @@
     <license>LGPLv3</license>
     <keywords>ovalarm,service</keywords>
 
-    <js-module src="www/backgroundService.js" name="CreateBackgroundService">
-        <clobbers target="CreateBackgroundService" />
+    <js-module src="www/BackgroundService.js" name="BackgroundService">
+        <clobbers target="BackgroundService" />
     </js-module>
 
     <js-module src="www/service.js" name="service">

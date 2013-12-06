@@ -1,5 +1,5 @@
 // This class is used on all Androids below Honeycomb
-package org.apache.cordova.statusBarNotification;
+package nl.cup_a_sep.ovalarm.plugin;
 
 
 import android.app.Notification;
