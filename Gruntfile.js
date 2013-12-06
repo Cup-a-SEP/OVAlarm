@@ -29,7 +29,7 @@ module.exports = function(grunt) {
             options: {
                 cwd: 'www',
                 htmlFile: 'index.html',
-                alwaysInclude: ['index.html', 'config.xml', 'img/**', 'js/config/**'],
+                alwaysInclude: ['index.html', 'config.xml', 'img/**', 'js/config/**', 'fonts/**'],
                 foldersToClean: ['platforms/android/assets/www/', 'platforms/ios/www/']
             }
         }
