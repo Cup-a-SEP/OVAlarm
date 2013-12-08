@@ -24,6 +24,7 @@
             .ready(function()
             {
                 tracker.pollUpdates();
+                app.alarms.startPolling();
 
                 $('#new').click(function()
                 {
@@ -42,18 +43,19 @@
                         delete app.storage.trip;
 
                         $(e.target).data('alarms', app.storage.alarms);
-                        app.storage.alarms = [];
+                        app.removeAllAlarms();
                     })
                     .on('wake', function(e)
                     {
                         app.storage.trip = $(e.target).data('trip');
                         app.storage.alarms = $(e.target).data('alarms');
                         tracker.pollUpdates();
+                        app.alarms.startPolling();
                     })
                     .on('die', function()
                     {
                         delete app.storage.trip;
-                        app.storage.alarms = [];
+                        app.removeAllAlarms();
                     });
             });
     };
@@ -93,6 +95,23 @@
         return least;
     };
 
+    /** Removes alarms set in the past. */
+    tracker.updateAlarms = function updateAlarms()
+    {
+        $('.set').each(function()
+        {
+            var id = $(this).attr('data-id');
+            var leg = Number(id.slice(1));
+            var type = id[0] == 'd' ? 'departure' : 'arrival';
+
+            if (!app.findAlarm(leg, type))
+                $(this)
+                    .removeClass('set')
+                    .find('.alarm-content')
+                    .text('+');
+        });
+    }
+
     /** Makes the tracker information update dynamically. (stops when itinerary element vanishes) */
     tracker.pollUpdates = function pollUpdates()
     {
@@ -100,7 +119,8 @@
         {
             tracker.updateProgress();
             var least = tracker.updateTimes();
-            setTimeout(pollUpdates, Math.max(Math.min(least / 2, 60e3), 1e3));
+
+            setTimeout(pollUpdates, least > 120e3 ? 60e3 : 1e3);
         }
     };
 
@@ -122,7 +142,7 @@
             edit(delay);
         }
         else
-            edit(alarm.leadTime);
+            edit(alarm.leadTime / 1000);
         
         function edit(d)
         {
@@ -137,7 +157,7 @@
         function close()
         {
             // Set alarm or remove it when it could not be set (probably set in the past)
-            if (!app.setAlarm(leg, type, delay))
+            if (!app.setAlarm(leg, type, delay * 1000))
                 tracker.removeAlarm(id);
             closeAlarmSettings();
         }
@@ -234,7 +254,7 @@
                     time: it.legs[i].startTime,
                     place: it.legs[i].from.name,
                     departure: (it.legs[i].startTime - now) / 1000,
-                    alarm: d_alarm && d_alarm.leadTime,
+                    alarm: d_alarm && d_alarm.leadTime / 1000,
                     oddEven: oddEven
                 });
             }
@@ -258,7 +278,7 @@
                     time: it.legs[i].endTime,
                     place: it.legs[i].to.name,
                     arrival: (it.legs[i].endTime - now) / 1000,
-                    alarm: a_alarm && a_alarm.leadTime,
+                    alarm: a_alarm && a_alarm.leadTime / 1000,
                     oddEven: oddEven
                 });
             }

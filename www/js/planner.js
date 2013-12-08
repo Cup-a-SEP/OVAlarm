@@ -13,6 +13,9 @@
 			delete app.storage.results;
 		}
 
+		delete app.storage.trip;
+		app.removeAllAlarms();
+
 		request = request || { when: Date() };
 
 		app.newPage();

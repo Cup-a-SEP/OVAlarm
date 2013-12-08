@@ -6,6 +6,8 @@
 	 * Invariant III: app.storage.alarms[].id is unique
 	 */
 
+	 var alarms = (app.alarms = app.alarms || {});
+
 	/**
 	 * Get's an unique representation of an alarm event
 	 * @param {Number} leg - To which leg this alarm is related
@@ -58,7 +60,7 @@
 				return undefined;
 			}
 
-			var time = alarm.leadTime + (alarm.type == 'departure' ? alarmLeg.startTime : alarmLeg.endTime);
+			var time = (alarm.type == 'departure' ? alarmLeg.startTime : alarmLeg.endTime) - alarm.leadTime;
 			if (!change && alarm.time != time)
 				change = 'times'; // Note that the times have changed, train is late for instance
 
@@ -68,6 +70,8 @@
 
 		// Sort the alarms by firing time
 		app.storage.alarms.sort(function(a,b) { return a.time - b.time; });
+
+		alarms.startPolling();
 		
 		return change;
 	};
@@ -95,7 +99,7 @@
 	 * Sets a new alarm or changes the existing alarm
 	 * @param {Number} leg - To which leg this alarm is related
 	 * @param {String} alarmType - Alarm type: {departure, arrival}.
-	 * @param {int} leadTime - The amount of time in seconds before the event that the alarm should sound
+	 * @param {int} leadTime - The amount of time in miliseconds before the event that the alarm should sound
 	 */
 	app.setAlarm = function setAlarm(leg, alarmType, leadTime)
 	{
@@ -110,7 +114,7 @@
 
 		// Sanity check: ignore when the alarm is set in the past
 		var now = new Date().getTime();
-		var alarm = leadTime + (alarmType == 'departure' ? leg.startTime : leg.endTime);
+		var alarm = (alarmType == 'departure' ? leg.startTime : leg.endTime) - leadTime;
 		if (alarm <= now)
 			return null;
 
@@ -127,6 +131,8 @@
 
 		// Sort the alarms by firing time
 		app.storage.alarms.sort(function(a,b) { return a.time - b.time; });
+
+		alarms.startPolling();
 
 		return alarm;
 	};
@@ -161,6 +167,7 @@
 	app.removeAllAlarms = function removeAllAlarms()
 	{
 		app.storage.alarms = [];
+		alarms.stopPolling();
 	};
 
 	/**
@@ -190,6 +197,36 @@
 			'arrival':'Aankomst'
 		}, notification = navigator.notification || window;
 		notification.alert('De ' + map[alarm.type] + ' wekker ging af!', function(){}, 'Alarm');
+	};
+
+	/** (Re)starts polling for alarms and fires them automatically. */
+	alarms.startPolling = function startPolling()
+	{
+		if (poll_id)
+			clearTimeout(poll_id);
+
+		poll();
+	}
+
+	/** Stop alarm polling. */
+	alarms.stopPolling = function stopPolling()
+	{
+		if (poll_id)
+			clearTimeout(poll_id);
+
+		poll_id = undefined;
+	}
+
+	var poll_id = undefined;
+
+	function poll()
+	{
+		var now = new Date().getTime();
+		var next = app.checkAlarm();
+		app.tracker.updateAlarms();
+
+		if (next != Infinity)
+			poll_id = setTimeout(poll, Math.max(Math.min((next - now) / 2, 300e3), .5e3));
 	};
 
 })(jQuery, window.app = window.app || {});

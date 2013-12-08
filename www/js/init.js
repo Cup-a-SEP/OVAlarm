@@ -11,6 +11,7 @@
 		var request = app.storage.request;
 		var results = app.storage.results;
 		var trip = app.storage.trip;
+		var alarms = app.storage.alarms;
 
 		app.newTrip();
 
@@ -32,6 +33,7 @@
 		if (trip)
 			$('main').ready(function()
 			{
+				app.storage.alarms = alarms;
 				app.trackTrip(trip);
 			});
 
