@@ -220,12 +220,18 @@
 			transformResult: function (response, originalQuery) {
 				var result = {};
 				var sug;
+
 				// Parse JSON, fallback to empty array if failing
 				try {
 					result.suggestions = JSON.parse(response).results;
 				} catch (e) {
+					console.warn('failed to parse JSON');
+				}
+
+				if (!result.suggestions) {
 					result.suggestions = [];
 				}
+
 				// set the correct data
 				for (var i = result.suggestions.length - 1; i >= 0; i--) {
 					sug = result.suggestions[i];

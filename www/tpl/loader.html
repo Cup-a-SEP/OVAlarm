@@ -1,31 +1,37 @@
 <style type="text/css">
-	/* Placeholder obviously */
+	/* TODO: Move to it's own file */
 	#loader {
-		position: fixed;
+		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		
 		background-color: rgba(0,0,0,.5);
 		margin: auto auto;
-
 		z-index: 1000000;
 	}
 
 	#loader div {
-		position: fixed;
-		font-size: 300%;
+		position: absolute;
+		opacity: 0.8;
+		top:50%;
+		bottom:0;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
+		width:100px;
+		height: 16px;
+		padding-top: 16px;
+		background-image: url("img/ajax-loader.gif");
+		background-position: 50%;
+		background-repeat: no-repeat;
 		text-align: center;
-		width: 100%;
-		color: Black;
-		text-shadow: White 2px 2px;
-		padding-top: 49%;
+		color:#FFF;
 	}
 </style>
 <script type="text/x-handlebars-template" id="tpl:loader">
 	<div id="loader">
-		<div>Loading...</div>
+		<div>loading</div>
 	</div>
 </script>
 <script type="text/javascript">
