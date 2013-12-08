@@ -192,39 +192,8 @@
             legCount++;
 
             // set the icon
-            // TODO: Make me a function
-            if (mode) {
-                mode = mode.toLowerCase();
-            }
-            switch (mode) {
-                case 'walk':
-                    icon = 'walking';
-                    break;
-                case 'bicycle':
-                    icon = 'bike';
-                    break;
-                case 'bus':
-                case 'public_transport':
-                    icon = 'bus';
-                    break;
-                case 'rail':
-                case 'train':
-                    icon = 'train';
-                    break;
-                case 'tram':
-                    icon = 'tram';
-                    break;
-                case 'metro':
-                case 'subway':
-                    icon = 'metro';
-                    break;
-                case 'car':
-                    icon = 'car';
-                    break;
-                default:
-                    icon = null;
-                    break;
-            }
+            // TODO: Make me a function [it was already there! app.formatMode, also as Handlebars helper]
+            // I've seperated duplicated the function to app.formatIcon (and helper) in case we're doing localization
 
             // Start place
             if (!stripStart) {
@@ -245,8 +214,7 @@
                 index: i,
                 time: it.legs[i].endTime,
                 mode: mode,
-                icon: icon,
-                type: it.legs[i].routeShortName || app.formatMode(mode),
+                type: it.legs[i].routeShortName || ucfirst(app.formatMode(mode)),
                 headsign: it.legs[i].headsign || it.legs[i].to.name,
                 oddEven: oddEven
             });
@@ -266,6 +234,11 @@
         }
 
         return out;
+    }
+
+    function ucfirst(str)
+    {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     function closeAlarmSettings()

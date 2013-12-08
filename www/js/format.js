@@ -62,15 +62,17 @@
 	}
 
 	/** Formats OpenTripPlanner modality designations in a more human-readable way. */
-	app.formatMode = function formatMode(mode)
+	app.formatMode = function formatIcon(mode)
 	{
 		return {
-			'WALK':       'walk',
-			'BICYCLE':    'bicycle',
+			'WALK':       'walking',
+			'BICYCLE':    'bike',
 			'CAR':        'car',
 			'TRAM':       'tram',
-			'SUBWAY':     'subway',
+			'METRO':      'metro',
+			'SUBWAY':     'metro',
 			'RAIL':       'train',
+			'TRAIN':      'train',
 			'BUS':        'bus',
 			'FERRY':      'ferry',
 			'TIMMERS':    'timmers',
@@ -85,7 +87,25 @@
 			// 'TRANSFER':   'transfer',
 			// 'STL':        'stl',
 			// 'CUSTOM_MOTOR_VEHICL': 'custom',
+			'PUBLIC_TRANSPORT': 'bus',
 		}[mode];
+	}
+
+	/** Formats OpenTripPlanner modality designations to icon names. */
+	app.formatIcon = function formatMode(mode)
+	{
+		return {
+			'WALK':             'walking',
+			'BICYCLE':          'bike',
+			'CAR':              'car',
+			'TRAM':             'tram',
+			'METRO':            'metro',
+			'SUBWAY':           'metro',
+			'RAIL':             'train',
+			'TRAIN':            'train',
+			'BUS':              'bus',
+			'PUBLIC_TRANSPORT': 'bus',
+		}[mode] || null;
 	}
 
 })(jQuery, window.app = window.app || {})
@@ -97,3 +117,4 @@ Handlebars.registerHelper('timing',   app.formatTiming);
 Handlebars.registerHelper('distance', app.formatDistance);
 Handlebars.registerHelper('time',     app.formatTime);
 Handlebars.registerHelper('mode',     app.formatMode);
+Handlebars.registerHelper('icon',     app.formatIcon);
