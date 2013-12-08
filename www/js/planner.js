@@ -14,6 +14,9 @@
 		}
 
 		request = request || { when: Date() };
+		
+		// dispose the addres resolvers so it won't leave behind DOM objects
+		disposeAddressResolvers();
 
 		app.newPage();
 		app.page
@@ -21,14 +24,13 @@
 			.append(app.templates.planner(request))
 			.ready(function()
 			{
-				$('#plan').click(function()
+				$('form#planner').on('submit', function(e)
 				{
-					app.planTrip();
-					return false;
-				});
+					// prevent normal submit behavior
+					e.preventDefault();
 
-				$('#planner input').on('change', function(e)
-				{
+					// TODO: BUILD IN A METHOD THAT VALIDATES WHETHER ALL FIELDS ARE SET BEFORE ACTUALLY DOING ALL THE NEXT ACTIONS
+
 					// Save old form values to history
 					newTrip(app.storage.request);
 					if (app.storage.results)
@@ -37,6 +39,9 @@
 
 					// Save new form values to storage
 					app.storage.request = planner.getValues();
+
+					// plan trip
+					app.planTrip();
 				});
 
 				$('#planner').on('wake', function()
@@ -88,11 +93,15 @@
 	/** Extracts planner values from the current form. */
 	planner.getValues = function getValues()
 	{
+		// TODO: Find a better place to do this transformation
+		var fromCoord = $('#from').data('coord');
+		var toCoord = $('#to').data('coord');
+
 		return {
 			from: $('#from').val(),
-			fromCoord: $('#from').attr('data-coord'),
+			fromCoord: fromCoord.lat + ',' + fromCoord.lng,
 			to: $('#to').val(),
-			toCoord: $('#to').attr('data-coord'),
+			toCoord: toCoord.lat + ',' + toCoord.lng,
 			when: $('#when').val(),
 			arrive: $('#arrive').is(':checked')
 		};
@@ -180,22 +189,45 @@
 		};
 	}
 
-	// Temporarily, replaced by suggestions widget
+	function disposeAddressResolvers ()
+	{
+		$('.has-address-resolver').removeClass('.has-address-resolver').autocomplete('dispose');
+	}
+
 	function addAddressResolver(e)
 	{
-		e.blur(function()
-		{
-			app.geoCode(e.val()).done(function(results)
-			{
-				if (results.length)
-				{
-					e.val(results[0].address);
-					e.attr('data-coord', results[0].coord);
+		// Temporary quick solution
+		var options = {
+			serviceUrl: "http://bag42.nl/api/v0/geocode/json",
+			paramName: "address",
+			maxHeight: '310',
+			transformResult: function (response, originalQuery) {
+				var result = {};
+				var sug;
+				// Parse JSON, fallback to empty array if failing
+				try {
+					result.suggestions = JSON.parse(response).results;
+				} catch (e) {
+					result.suggestions = [];
 				}
-				else
-					e.val(e.val() + '?');
-			});
-		});
+				// set the correct data
+				for (var i = result.suggestions.length - 1; i >= 0; i--) {
+					sug = result.suggestions[i];
+					sug.value = sug.formatted_address;
+					sug.data = sug.geometry.location;
+				}
+
+				return result;
+			},
+			onSearchStart: function (query) {
+				query.address = query.address + '*';
+			},
+			onSelect: function (suggestion) {
+				$(this).data('coord', suggestion.geometry.location);
+			}
+		};
+		// Add a class so it's easy to dispose on rerender
+		e.addClass('has-address-resolver').autocomplete(options);
 	}
 
 })(jQuery, window.app = window.app || {});
