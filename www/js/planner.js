@@ -24,7 +24,7 @@
 			.append(app.templates.planner(request))
 			.ready(function()
 			{
-				$('form#planner').on('submit', function(e)
+				$('form#planner').off('submit').on('submit', function(e)
 				{
 					// prevent normal submit behavior
 					e.preventDefault();
@@ -44,16 +44,29 @@
 					app.planTrip();
 				});
 
-				$('#planner').on('wake', function()
+				$('#planner').off('wake').on('wake', function()
 				{
 					app.storage.request = planner.getValues();
 					if ($('#results').length)
 						app.storage.results = $('#results').data('otp');
 					else
 						delete app.storage.results;
-				}).on('sleep', function()
+				}).off('sleep').on('sleep', function()
 				{
 					$('#results').data('otp', app.storage.results);
+				});
+
+				// sync the changing of the radio-buttons to the state of their labels
+				$('[type="radio"]').off('change').on('change', function ()
+				{
+					var radio = $(this);
+					if (radio.is(':checked')) {
+						radio.parent('label').addClass('active');
+						radio.parent('label').siblings('label').removeClass('active');
+					} else {
+						radio.parent('label').removeClass('active');
+						radio.parent('label').siblings('label').addClass('active');
+					}
 				});
 
 				addAddressResolver($('#from'));
