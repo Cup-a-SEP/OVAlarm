@@ -40,15 +40,20 @@
                     {
                         $(e.target).data('trip', app.storage.trip);
                         delete app.storage.trip;
+
+                        $(e.target).data('alarms', app.storage.alarms);
+                        app.storage.alarms = [];
                     })
                     .on('wake', function(e)
                     {
                         app.storage.trip = $(e.target).data('trip');
+                        app.storage.alarms = $(e.target).data('alarms');
                         tracker.pollUpdates();
                     })
                     .on('die', function()
                     {
                         delete app.storage.trip;
+                        app.storage.alarms = [];
                     });
             });
     };
@@ -100,28 +105,48 @@
     };
 
     /** Open the alarm settings window. */
-    tracker.editAlarm = function editAlarm(id)
+    tracker.editAlarm = function editAlarm(id) // id = alarm *interface* id
     {
-        closeAlarmSettings();
+        $('#alarm-done').click();
 
-        // Defaults (10 minutes)
-        if (!(id in app.storage.alarms))
-            edit(600);
-        
-        function edit(delay)
+        var leg = Number(id.slice(1));
+        var type = id[0] == 'd' ? 'departure' : 'arrival';
+        var alarm = app.findAlarm(leg, type);
+        var delay = 600; // Defaults (10 minutes)
+
+        if (!alarm)
         {
-            app.storage.alarms[id] = delay;
+            // Delay temporarily set to 0 seconds so it doesn't trigger whilst sliding
+            if (!(alarm = app.setAlarm(leg, type, 0)))
+                return; // Cancel when alarm creation failed
+            edit(delay);
+        }
+        else
+            edit(alarm.leadTime);
+        
+        function edit(d)
+        {
             $('.alarm[data-id=' + id + ']')
                 .addClass('set')
                 .find('.alarm-content')
-                .text(app.formatDuration(delay));
+                .text(app.formatDuration(d));
+
+            delay = d;
+        }
+
+        function close()
+        {
+            // Set alarm or remove it when it could not be set (probably set in the past)
+            if (!app.setAlarm(leg, type, delay))
+                tracker.removeAlarm(id);
+            closeAlarmSettings();
         }
 
         app.page
             .append(app.templates.alarmSetting(
             {
                 id: id,
-                delay: app.storage.alarms[id] / 60
+                delay: delay / 60
             }))
             .ready(function()
             {
@@ -139,14 +164,18 @@
                     edit($('#delay').val() * 60);
                 });
 
-                $('#itinerary,#info,#menu').mouseup(closeAlarmSettings);
+                $('#alarm-done').click(close);
+                $('#itinerary,#info,#menu').mouseup(close);
             });
     };
 
     /** Removes the alarm setting (and window). */
     tracker.removeAlarm = function removeAlarm(id)
     {
-        delete app.storage.alarms[id];
+        var leg = Number(id.slice(1));
+        var type = id[0] == 'd' ? 'departure' : 'arrival';
+
+        app.removeAlarm(leg, type);
         $('.set[data-id=' + id + ']')
             .removeClass('set')
             .find('.alarm-content')
@@ -164,7 +193,7 @@
             legs: []
         };
         var now = new Date().getTime();
-        var stripStart, stripEnd, mode, icon, oddEven, legCount=0;
+        var stripStart, stripEnd, mode, oddEven, legCount=0, d_alarm, a_alarm;
 
         for (var i = 0; i < it.legs.length; ++i)
         {
@@ -173,6 +202,8 @@
             stripStart = false;
             stripEnd = false;
             mode = it.legs[i].mode;
+            d_alarm = app.findAlarm(i, 'departure');
+            a_alarm = app.findAlarm(i, 'arrival');
 
             // Strip out some uninteresting Walk information
             if (mode == 'WALK') {
@@ -203,7 +234,7 @@
                     time: it.legs[i].startTime,
                     place: it.legs[i].from.name,
                     departure: (it.legs[i].startTime - now) / 1000,
-                    alarm: app.storage.alarms['d'+i],
+                    alarm: d_alarm && d_alarm.leadTime,
                     oddEven: oddEven
                 });
             }
@@ -227,7 +258,7 @@
                     time: it.legs[i].endTime,
                     place: it.legs[i].to.name,
                     arrival: (it.legs[i].endTime - now) / 1000,
-                    alarm: app.storage.alarms['a'+i],
+                    alarm: a_alarm && a_alarm.leadTime,
                     oddEven: oddEven
                 });
             }

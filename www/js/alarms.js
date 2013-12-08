@@ -5,7 +5,28 @@
 	 * Invariant II: for all i: app.storage.alarms[0].time <= app.storage.alarms[i].time
 	 * Invariant III: app.storage.alarms[].id is unique
 	 */
-	
+
+	/**
+	 * Get's an unique representation of an alarm event
+	 * @param {Number} leg - To which leg this alarm is related
+	 * @param {String} alarmType - Alarm type: {departure, arrival}.
+	 */
+	 app.alarmId = function alarmId(leg, alarmType)
+	 {
+	 	if ($.isNumeric(leg))
+	 	{
+	 		if (!('trip' in app.storage)
+			|| !(leg in app.storage.trip.itineraries[0].legs))
+				return 'null';
+
+			leg = app.storage.trip.itineraries[0].legs[leg];
+	 	}
+
+	 	return alarmType == 'departure' ?
+	 		'd_' + (leg.from.stopId && leg.from.stopId.agencyId + '_' + leg.from.stopId.id):
+	 		'a_' + (leg.to.stopId && leg.to.stopId.agencyId + '_' + leg.to.stopId.id);
+	 }
+
 	/**
 	 * Recalculates the alarms (should be called when tracked trip data has changed). 
 	 */
@@ -16,7 +37,7 @@
 		// Obtain the current trip details or fail.
 		if (!('trip' in app.storage)
 		|| !(leg in app.storage.trip.itineraries[0].legs))
-			return;
+			return change;
 
 		var legs = app.storage.trip.itineraries[0].legs;
 	
@@ -26,8 +47,7 @@
 			var alarmLeg = null;
 			$.each(legs, function(i, leg)
 			{
-				var id = alarm.type == 'departure' ? 'd' + leg.from.stopCode : 'a' + leg.to.stopCode;
-				if (alarm.id == id)
+				if (alarm.id == app.alarmId(leg, alarm.type))
 					alarmLeg = leg;
 			});
 
@@ -81,30 +101,34 @@
 	{
 		if (!('trip' in app.storage)
 		|| !(leg in app.storage.trip.itineraries[0].legs))
-			return;
-
-		leg = app.storage.trip.itineraries[0].legs[leg];
+			return null;
 
 		// Remove an earlier setting for this alarm if there is one
 		app.removeAlarm(leg, alarmType);
+
+		leg = app.storage.trip.itineraries[0].legs[leg];
 
 		// Sanity check: ignore when the alarm is set in the past
 		var now = new Date().getTime();
 		var alarm = leadTime + (alarmType == 'departure' ? leg.startTime : leg.endTime);
 		if (alarm <= now)
-			return;
+			return null;
 
-		// Calculate the new alarm time and push the alarm into the set
-		app.storage.alarms.push(
-		{
-			id: (alarmType == 'departure' ? 'd' + leg.from.stopCode : 'a' + leg.to.stopCode),
+		// Calculate the new alarm time
+		var alarm = {
+			id: app.alarmId(leg, alarmType),
 			type: alarmType,
 			leadTime: leadTime,
 			time: alarm,
-		});
+		};
+
+		// Push the alarm into the set
+		app.storage.alarms.push(alarm);
 
 		// Sort the alarms by firing time
 		app.storage.alarms.sort(function(a,b) { return a.time - b.time; });
+
+		return alarm;
 	};
 	
 	/**
@@ -112,14 +136,9 @@
 	 * @param {Number} leg - To which leg this alarm is related
 	 * @param {String} alarmType - Alarm type: {departure, arrival}.
 	 */
-	app.removeAlarm = function removeAlarm(leg, alarmType) {
-	
-		if (!('trip' in app.storage)
-		|| !(leg in app.storage.trip.itineraries[0].legs))
-			return;
-
-		leg = app.storage.trip.itineraries[0].legs[leg];
-		var id = alarmType == 'departure' ? 'd' + leg.from.stopCode : 'a' + leg.to.stopCode;
+	app.removeAlarm = function removeAlarm(leg, alarmType)
+	{
+		var id = app.alarmId(leg, alarmType);
 
 		// Find the requested alarm
 		for (var i = 0; i < app.storage.alarms.length; ++i) {
@@ -131,7 +150,7 @@
 				return true;
 			}
 		}
-		return false;		
+		return false;
 	};
 	
 	/**
@@ -143,6 +162,22 @@
 	{
 		app.storage.alarms = [];
 	};
+
+	/**
+	 * Returns the alarm object of the sepcified leg and type, or null
+	 * @param {Number} leg - To which leg this alarm is related
+	 * @param {String} alarmType - Alarm type: {departure, arrival}.
+	 */
+	app.findAlarm = function findAlarm(leg, alarmType)
+	{
+		var id = app.alarmId(leg, alarmType);
+
+		for (var i = 0; i < app.storage.alarms.length; ++i)
+			if (app.storage.alarms[i].id == id)
+				return app.storage.alarms[i];
+
+		return null;
+	}
 	
 	/**
 	 * Fires an alarm
