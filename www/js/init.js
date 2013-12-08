@@ -70,8 +70,8 @@
 	// Load data (async)
 	setTimeout(function()
 	{
-		app.loadStorage({ alarms: {} });
-		app.storage.alarms = app.storage.alarms || {};
+		app.loadStorage({ alarms: [] });
+		app.storage.alarms = app.storage.alarms || [];
 		data.resolve();
 	}, 0);
 
