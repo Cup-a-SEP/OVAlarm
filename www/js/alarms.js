@@ -190,14 +190,35 @@
 	 * Fires an alarm
 	 * @param {object} alarm - The alarm object to fire
 	 */
-	app.fireAlarm = function fireAlarm(alarm) {
-			
-		var map = {
-			'departure':'Vertrek',
-			'arrival':'Aankomst'
-		}, notification = navigator.notification || window;
-		notification.alert('De ' + map[alarm.type] + ' wekker ging af!', function(){}, 'Alarm');
+	app.fireAlarm = function fireAlarm(alarm)
+	{		
+		var leg = alarms.findLeg(alarm),
+			notification = navigator.notification || window,
+			mode = app.formatMode(leg.mode),
+			time = app.formatDuration(alarm.leadTime / 1000)
+			way = alarm.type == 'departure' ? ' departs in ' : ' arrives in '
+			msg = (leg.mode == 'WALK' ?
+				(alarm.type == 'departure' ?
+					'Your trip starts in ' + time + '!':
+					'You will arrive in ' + time + '.') :
+				'The ' + mode + way + time + '!');
+
+		notification.alert(msg, function(){}, 'Alarm');
 	};
+
+	/** Finds the leg object the alarm belongs to. */
+	alarms.findLeg = function findLeg(alarm)
+	{
+		if (!('trip' in app.storage))
+			return null;
+
+		var legs = app.storage.trip.itineraries[0].legs;
+		for (var i = 0; i < legs.length; ++i)
+			if (alarm.id == app.alarmId(legs[i], alarm.type))
+				return legs[i];
+
+		return null;
+	}
 
 	/** (Re)starts polling for alarms and fires them automatically. */
 	alarms.startPolling = function startPolling()
