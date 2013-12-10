@@ -53,6 +53,10 @@ To see if the installation has succeeded see if the config files in `/plaforms` 
 
 When changes were made to the plugin or the platform folders get mangled these steps might be required again.
 
+### Submodules
+
+Some parts use git submodules. To get the required files, use 'git submodule init' and then 'git submodule update'. 
+
 ## Contributors
 
 * Ferry Timmers
