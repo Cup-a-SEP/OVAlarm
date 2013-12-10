@@ -39,7 +39,7 @@
 	/** Formats a relative time (seconds) in a more human-readable way. */
 	app.formatTiming = function formatTiming(seconds)
 	{
-		seconds = Number(seconds);
+		seconds = Math.floor(seconds);
 		if (!seconds)
 			return 'now';
 		else if (seconds < 0)

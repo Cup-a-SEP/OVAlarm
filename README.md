@@ -57,7 +57,7 @@ When changes were made to the plugin or the platform folders get mangled these s
 
 * Ferry Timmers
 * Jasper Hartong
-* Jeroen
+* Jeroen van de Ven
 
 ## License
 

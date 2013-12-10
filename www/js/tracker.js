@@ -15,7 +15,7 @@
             .append(app.templates.info({
                 from: trip.from.name,
                 to: trip.to.name,
-                duration: itinerary.duration / 1000,
+                duration: itinerary.duration,
                 distance: itinerary.distance,
                 arrival: trip.itineraries[0].endTime
             }))
@@ -120,7 +120,7 @@
             tracker.updateProgress();
             var least = tracker.updateTimes();
 
-            setTimeout(pollUpdates, least > 120e3 ? 60e3 : 1e3);
+            setTimeout(pollUpdates, least > 180e3 ? 60e3 : 1e3);
         }
     };
 
@@ -219,7 +219,7 @@
     {
         var out =
         {
-            duration: it.duration / 1000,
+            duration: it.duration,
             distance: 0,
             legs: []
         };

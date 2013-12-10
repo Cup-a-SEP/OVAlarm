@@ -63,6 +63,8 @@
 		
 		$(document).on('pause', function()
 		{
+			if ($('#planner').length)
+				app.storage.request = planner.getValues();
 			app.exitApp();
 		});
 		
