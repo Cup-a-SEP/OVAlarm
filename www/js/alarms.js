@@ -279,7 +279,7 @@
 var fritsService = cordova.require('cordova/plugin/fritsService');*/
 // NOTE: if the plugin works this will be done automatically
 
-// Always start the service even if it isn't neede yet.
+// Always start the service even if it isn't needed yet.
 $(document).on('deviceready', function() {
 	// Make an API call and start the service on success, else handle error.
 	if (!('service' in app))
@@ -304,19 +304,29 @@ function handleError(data) {
 
 // Start the service
 function startService() {
+	console.log('startservice');
 	app.service.startService(	function(r){handleSuccess(r);},
 							function(e){handleError(e);});
 }
 
 // Enable the service timer with 20s interval
 function enableTimer() {
+	console.log('enabletimer');
 	app.service.enableTimer(	20000,
 							function(r){handleSuccess(r);},
+							function(e){handleError(e);});
+}
+
+// Start the service and then enable the timer
+function startServiceAndEnableTimer() {
+	console.log('startservice');
+	app.service.startService(	function(r){enableTimer();},
 							function(e){handleError(e);});
 }
  			
 // Register the service to start on reboot of the device
 function registerForBootStart() {
+	console.log('registerboot');
 	app.service.registerForBootStart(	function(r){handleSuccess(r);},
 									function(e){handleError(e);});
 }
@@ -367,8 +377,7 @@ function startBackgroundService(data) {
 		} 
 
 	} else { 
-		startService();
-		enableTimer();
+		startServiceAndEnableTimer();
 		
 	} 
 
