@@ -162,11 +162,22 @@
             closeAlarmSettings();
         }
 
+
+        var maxEndTime = new Date(alarm.time);
+        var now = new Date();
+        var maxMinutes = Math.floor( (maxEndTime-now) /60000);
+        var defaultDelayMinutes = delay / 60;
+
+        if (maxMinutes <= 0)
+            return;
+
+
         app.page
             .append(app.templates.alarmSetting(
             {
                 id: id,
-                delay: delay / 60
+                delay: maxMinutes < defaultDelayMinutes ? maxMinutes : defaultDelayMinutes,
+                max: maxMinutes < 60 ? maxMinutes : 60
             }))
             .ready(function()
             {
