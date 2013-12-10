@@ -30,6 +30,7 @@
         <source-file src="src/android/StatusBarNotification.java" target-dir="src/nl/cup_a_sep/ovalarm/plugin" />
         <source-file src="src/android/StatusNotificationIntent.java" target-dir="src/nl/cup_a_sep/ovalarm/plugin" />
         <source-file src="libs/android/backgroundserviceplugin-3.0.0.jar" target-dir="libs" />
+        <source-file src="res/android/drawable-ldpi/notification.png" target-dir="res/drawable-ldpi" />
         <source-file src="res/android/drawable-hdpi/notification.png" target-dir="res/drawable-hdpi" />
         <source-file src="res/android/drawable-mdpi/notification.png" target-dir="res/drawable-mdpi" />
         <source-file src="res/android/drawable-xhdpi/notification.png" target-dir="res/drawable-xhdpi" />
