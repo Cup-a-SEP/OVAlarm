@@ -4,3 +4,6 @@
 [submodule "www/js/libs/jQuery-Autocomplete"]
 	path = www/js/libs/jQuery-Autocomplete
 	url = https://github.com/devbridge/jQuery-Autocomplete.git
+[submodule "plugins-dev/DatePicker"]
+	path = plugins-dev/DatePicker
+	url = https://github.com/Cup-a-SEP/com.dileep.plugins.datepicker.git
