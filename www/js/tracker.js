@@ -219,7 +219,7 @@
     {
         var out =
         {
-            duration: it.duration,
+            duration: it.duration / 1000,
             distance: 0,
             legs: []
         };
