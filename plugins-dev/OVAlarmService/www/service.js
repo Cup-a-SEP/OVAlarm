@@ -21,4 +21,4 @@
 
 var BackgroundService = require('./BackgroundService');
 
-module.exports = new BackgroundService('nl.cup_a_sep.ovalarm.OVAlarmService');
+module.exports = new BackgroundService('nl.cup_a_sep.ovalarm.plugin.OVAlarmService');
