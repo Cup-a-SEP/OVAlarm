@@ -47,7 +47,7 @@ section#itinerary {
 		    	h5 {
 		    		border-left: 2px solid @mainhighlightcolor !important;
 		    	}
-		    	* {
+		    	h5, .text-muted {
 		    		color: @mainhighlightcolor !important;
 		    	}
 		    }
@@ -105,21 +105,27 @@ section#itinerary {
 	button.alarm {
 		margin-top: 5px;
 		margin-right: 5px;
-		color: rgb(167, 160, 154);
-		&.set:after { content: " before"; }
-	}
-
-	#alarm-setting {
-		position: fixed;
-		left:10px;
-		right:10px;
-		background-color: white;
-		padding:10px;
-		box-shadow: rgb(221, 221, 221) 2px 2px 5px;
-	    -webkit-border-radius: 2px;
-		input[type="range"] {
-			width: 100%;
-			margin:5px 0;
+		color: rgb(167, 160, 154) !important;
+		&.set {
+			.label();
+			.label-primary();
+			color:white !important;
+			text-decoration: none;
+			&:after { content: " before"; }
 		}
+	}
+}
+
+#alarm-setting {
+	position: fixed;
+	left:10px;
+	right:10px;
+	background-color: white;
+	padding:10px;
+	box-shadow: rgb(221, 221, 221) 2px 2px 5px;
+    -webkit-border-radius: 2px;
+	input[type="range"] {
+		width: 100%;
+		margin:5px 0;
 	}
 }
