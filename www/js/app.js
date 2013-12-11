@@ -85,12 +85,8 @@
 	/** Closes the app. */
 	app.exitApp = function exitApp()
 	{
-		// Set background service for alarms
-		var nextAlarm = app.storage.alarms[0];
-		console.log('Setting background alarm:');
-		setBackgroundAlarm(nextAlarm.time / 1000, "OV-Alarm", nextAlarm.type);
+		// Note: moved to init.js
 
-		//TODO: what does this line do?:
 		$(document).trigger('appexit');
 
 		(app.onDevice() ? navigator.app.exitApp : function exitApp()
