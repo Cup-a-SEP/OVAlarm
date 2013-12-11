@@ -159,7 +159,7 @@
 			app.loader.hide();
 		}).fail(function(errorCode, errorMessage)
 		{
-			planner.showError('Trip search failed: ', errorMessage /*debug:* / + ' (' + errorCode + ')'/**/);
+			planner.showError('Trip search failed: ' + errorMessage /*debug:* / + ' (' + errorCode + ')'/**/);
 			app.loader.hide();
 		});
 	};
