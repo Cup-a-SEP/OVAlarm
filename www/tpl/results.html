@@ -3,11 +3,14 @@
 	<section id="results">
 	{{#each results}}
 		<div class="result">
+			<div class="row">
+				<div class="col-xs-12"><h4 class="">{{duration duration}}, {{distance distance}}</h4></div>
+			</div>
 			{{#each legs}}
 			{{#if mode}}
 			<div class="leg row">
-				<div class="col-xs-3 text-muted">{{mode mode}}</div>
-				<div class="col-xs-9">{{type}}</div>
+				<div class="col-xs-3 text-muted"><i class="icon icon-{{icon mode}}"></i></div>
+				<div class="col-xs-9"><b>{{mode mode}} {{#if type}} – {{type}} {{/if}}</b></div>
 			</div>
 			{{else}}
 			<div class="place row">
@@ -17,8 +20,7 @@
 			{{/if}}
 			{{/each}}
 			<div class="row">
-				<div class="col-xs-8"><div class="btn disabled btn-fake">{{duration duration}}, {{distance distance}}</div></div>
-				<div class="col-xs-4"><button id="track{{@index}}" class="btn btn-link pull-right">Track trip</button><div>
+				<div class="col-xs-12"><button id="track{{@index}}" class="btn btn-xs btn-primary pull-right"><i class="glyphicon glyphicon-record"></i> Track trip</button></div>
 			</div>
 		</div>
 	{{else}}
