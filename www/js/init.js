@@ -102,7 +102,7 @@
 			gui.resolve();
 
 			// Fake things when the app is simulated in a browser
-			if (!('app' in navigator))
+			if (!app.onDevice())
 			{
 				$(document).trigger('deviceready');
 				debug();

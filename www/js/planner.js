@@ -101,7 +101,7 @@
 			app.loader.hide();
 		}).fail(function(errorCode, errorMessage)
 		{
-			planner.showError(errorMessage /*debug:*/ + ' (' + errorCode + ')');
+			planner.showError(errorMessage /*debug:* / + ' (' + errorCode + ')'/**/);
 			app.loader.hide();
 		});
 	};
