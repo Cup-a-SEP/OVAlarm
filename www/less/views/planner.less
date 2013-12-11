@@ -1,8 +1,11 @@
 form#planner {
 	padding:0 10px;
+	h4 {
+		padding: 5px 0;
+	}
 	#done {
 		// moved to the top with negative margin to not disrupt the center aligned text of the title
-		margin-top: -36px;
+		margin-top: -46px;
 		// moved to the right with negative margin to not disrupt form padding
 		margin-right:-10px;
 	}
@@ -13,11 +16,13 @@ form#planner {
 		}
 		.col-xs-4 {
 			padding:0;
+			.text-overflow();
 		}
 	}
 	label.arrdep {
 		margin:0;
-		padding: 7px 2px;
+		padding: 14px 0;
+		font-size: 15px;
 		&.active {
 			font-weight: bold;
 		}
@@ -76,7 +81,7 @@ form#planner {
 
   .autocomplete-suggestion {
     display: block;
-    padding: 6px 15px;
+    padding: 10px 15px;
     clear: both;
     font-weight: normal;
     line-height: 18px;
