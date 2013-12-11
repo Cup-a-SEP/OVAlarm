@@ -7,3 +7,6 @@
 [submodule "plugins-dev/DatePicker"]
 	path = plugins-dev/DatePicker
 	url = https://github.com/Cup-a-SEP/com.dileep.plugins.datepicker.git
+[submodule "www/js/libs/jQuery-Autocomplete-noparams"]
+	path = www/js/libs/jQuery-Autocomplete-noparams
+	url = https://github.com/clinct/jQuery-Autocomplete.git

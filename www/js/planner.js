@@ -110,14 +110,14 @@
 	planner.getValues = function getValues()
 	{
 		// TODO: Find a better place to do this transformation
-		var fromCoord = $('#from').data('coord');
-		var toCoord = $('#to').data('coord');
+		// var fromCoord = $('#from').data('coord');
+		// var toCoord = $('#to').data('coord');
 
 		return {
 			from: $('#from').val(),
-			fromCoord: fromCoord.lat + ',' + fromCoord.lng,
+			fromCoord: $('#from').data('coord'),
 			to: $('#to').val(),
-			toCoord: toCoord.lat + ',' + toCoord.lng,
+			toCoord: $('#to').data('coord'),
 			when: $('#when').val(),
 			arrive: $('#arrive').is(':checked')
 		};
@@ -214,16 +214,15 @@
 	{
 		// Temporary quick solution
 		var options = {
-			serviceUrl: "http://bag42.nl/api/v0/geocode/json",
-			paramName: "address",
+			serviceUrl: "http://ovh.openkvk.nl:8888/",
+			paramName: "noparam", // FIXME: NEWBAGHACK: Hack as the above API doesn't work with data params
 			maxHeight: '310',
 			transformResult: function (response, originalQuery) {
 				var result = {};
 				var sug;
-
 				// Parse JSON, fallback to empty array if failing
 				try {
-					result.suggestions = JSON.parse(response).results;
+					result.suggestions = JSON.parse(response).features;
 				} catch (e) {
 					console.warn('failed to parse JSON');
 				}
@@ -232,20 +231,28 @@
 					result.suggestions = [];
 				}
 
+				// FIXME: NEWBAGHACK: keep only the first 10 results
+				result.suggestions = result.suggestions.slice(0,9);
+
 				// set the correct data
 				for (var i = result.suggestions.length - 1; i >= 0; i--) {
 					sug = result.suggestions[i];
-					sug.value = sug.formatted_address;
-					sug.data = sug.geometry.location;
+					sug.value = sug.properties.search;
+					sug.data = sug.geometry.coordinates[1] + ',' + sug.geometry.coordinates[0];
 				}
 
 				return result;
 			},
 			onSearchStart: function (query) {
-				query.address = query.address + '*';
+				// adding the magic *
+				for (var prop in query) {
+					if (query.hasOwnProperty(prop)) {
+						query[prop] = query[prop] + '*';
+					}
+				}
 			},
 			onSelect: function (suggestion) {
-				$(this).data('coord', suggestion.geometry.location);
+				$(this).data('coord', suggestion.data);
 			}
 		};
 		// Add a class so it's easy to dispose on rerender
