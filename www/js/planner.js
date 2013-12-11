@@ -167,9 +167,6 @@
 	/** Extracts planner values from the current form. */
 	planner.getValues = function getValues()
 	{
-		// TODO: Find a better place to do this transformation
-		// var fromCoord = $('#from').data('coord');
-		// var toCoord = $('#to').data('coord');
 		var date = $('#date').attr('data-iso');
 		var time = $('#time').attr('data-iso');
 
