@@ -177,7 +177,8 @@
             {
                 id: id,
                 delay: maxMinutes < defaultDelayMinutes ? maxMinutes : defaultDelayMinutes,
-                max: maxMinutes < 60 ? maxMinutes : 60
+                max: maxMinutes < 60 ? maxMinutes : 60,
+                min: 1
             }))
             .ready(function()
             {
