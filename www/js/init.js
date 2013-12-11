@@ -44,6 +44,14 @@
 	$(document).one('appexit', function()
 	{
 		app.saveStorage();
+
+		// Set background service for alarms
+		if (app.storage.alarms.length)
+		{
+			var nextAlarm = app.storage.alarms[0];
+			console.log('Setting background alarm:');
+			setBackgroundAlarm(nextAlarm.time / 1000, "OV-Alarm", nextAlarm.type);
+		}
 	});
 
 	// App done loading event

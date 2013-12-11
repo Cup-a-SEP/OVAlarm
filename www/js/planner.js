@@ -59,12 +59,12 @@
 					$('#results').data('otp', app.storage.results);
 				});
 
-				$('#done').click(function()
+				$('#done').click(function(e)
 				{
+					e.preventDefault();
 					delete app.storage.request;
 					delete app.storage.results;
 					app.exitApp();
-					return false;
 				});
 
 				if ('datePicker' in window)
