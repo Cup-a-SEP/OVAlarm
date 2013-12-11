@@ -59,6 +59,65 @@
 					$('#results').data('otp', app.storage.results);
 				});
 
+				$('#done').click(function()
+				{
+					delete app.storage.request;
+					delete app.storage.results;
+					app.exitApp();
+					return false;
+				});
+
+				if ('datePicker' in window)
+					$('#date').click(function()
+					{
+						datePicker.show({
+							mode: 'date',
+							date: planner.getValues().when,
+							allowOldDates: false
+						}, planner.setDate);
+						return false;
+					})
+				else
+					$('#date').blur(function() // Fallback when the datepicker fails
+					{
+						// TODO: Validate input!
+						var val = $('#date').val().split('-');
+						var date = new Date();
+						date.setDate(val[0]);
+						date.setMonth(val[1] - 1);
+
+						if (val[2])
+						{
+							val[2] = String(val[2]);
+							if (val[2].length > 2)
+								date.setFullYear(val[2]);
+							else
+								date.setFullYear(String(date.getFullYear()).substr(0,2) + val[2]);
+						}
+						planner.setDate(date);
+					});
+
+				if ('datePicker' in window)
+					$('#time').click(function()
+					{
+						datePicker.show({
+							mode: 'time',
+							date: planner.getValues().when,
+							allowOldDates: false
+						}, planner.setTime);
+						return false;
+					})
+				else
+					$('#time').blur(function() // Fallback when the datepicker fails
+					{
+						// TODO: Validate input!
+						var val = $('#time').val().split(':');
+						var time = new Date();
+						time.setHours(val[0]);
+						time.setMinutes(val[1]);
+						planner.setTime(time);
+					});
+
 				// sync the changing of the radio-buttons to the state of their labels
 				$('[type="radio"]').off('change').on('change', function ()
 				{
@@ -81,7 +140,6 @@
 	app.planTrip = function planTrip()
 	{
 		var values = planner.getValues();
-		values.when = values.when.split('T');
 
 		app.loader.show();
 
@@ -89,8 +147,8 @@
 		{
 			fromPlace: values.fromCoord,
 			toPlace: values.toCoord,
-			date: values.when[0],
-			time: values.when[1],
+			date: app.formatISODate(values.when),
+			time: app.formatISOTime(values.when),
 			arriveBy: values.arrive
 		}).done(function(results)
 		{
@@ -112,16 +170,34 @@
 		// TODO: Find a better place to do this transformation
 		// var fromCoord = $('#from').data('coord');
 		// var toCoord = $('#to').data('coord');
+		var date = $('#date').attr('data-iso');
+		var time = $('#time').attr('data-iso');
 
 		return {
 			from: $('#from').val(),
 			fromCoord: $('#from').data('coord'),
 			to: $('#to').val(),
 			toCoord: $('#to').data('coord'),
-			when: $('#when').val(),
+			when: new Date(date + ' ' + time),
 			arrive: $('#arrive').is(':checked')
 		};
 	};
+
+	/** Sets the date in the current form. */
+	planner.setDate = function setDate(date)
+	{
+		$('#date')
+			.val(app.formatDate(date))
+			.attr('data-iso', app.formatISODate(date));
+	}
+
+	/** Sets the time in the current form. */
+	planner.setTime = function setTime(time)
+	{
+		$('#time')
+			.val(app.formatTime(time))
+			.attr('data-iso', app.formatISOTime(time));
+	}
 
 	/** Displays an error message. */
 	planner.showError = function showError(error)

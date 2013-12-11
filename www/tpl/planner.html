@@ -15,7 +15,8 @@
 		<div class="form-group container">
 			<div class="row">
 				<div class="col-xs-8">
-					<input type="datetime-local" id="when" class="form-control input-lg" name="when" value="{{ISOtime when}}">
+					<input type="text" id="date" class="form-control input-lg" name="date" value="{{date when}}" data-iso="{{ISOdate when}}">
+					<input type="text" id="time" class="form-control input-lg" name="time" value="{{time when}}" data-iso="{{ISOtime when}}">
 				</div>
 				<div class="col-xs-4">
 					<label for="arrive" class="radio-inline input-lg arrdep {{#if arrive}}active{{/if}}">Arrive
