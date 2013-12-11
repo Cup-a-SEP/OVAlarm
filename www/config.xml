@@ -49,6 +49,7 @@
     <gap:splash gap:platform="winphone" src="res/screen/windows-phone/screen-portrait.jpg" />
     <access origin="http://127.0.0.1*" />
     <access origin="http://bag42.nl" />
+    <access origin="http://ovh.openkvk.nl" />
     <access origin="http://opentripplanner.nl" />
     <content src="index.html" />
 </widget>
