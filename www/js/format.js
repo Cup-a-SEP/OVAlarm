@@ -27,6 +27,30 @@
 		return pad(datetime.getHours()) + ':' + pad(datetime.getMinutes());
 	}
 
+	/** Formats a (valid) js date repersentation according to datetime locale*/
+	app.formatLCDateTime = function formatLCDateTime(datetime)
+	{
+		if (!datetime)
+			return '';
+		return new Date(datetime).toLocaleString();
+	}
+
+	/** Formats a (valid) js date repersentation according to date locale*/
+	app.formatLCDate = function formatLCDate(datetime)
+	{
+		if (!datetime)
+			return '';
+		return new Date(datetime).toLocaleDateString();
+	}
+
+	/** Formats a (valid) js date repersentation according to time locale*/
+	app.formatLCTime = function formatLCTime(datetime)
+	{
+		if (!datetime)
+			return '';
+		return new Date(datetime).toLocaleTimeString();
+	}
+
 	/** Formats a duration in seconds in a more human-readable way. */
 	app.formatDuration = function formatDuration(seconds)
 	{
@@ -73,6 +97,13 @@
 	{
 		datetime = new Date(datetime);
 		return datetime.getHours() + ':' + pad(datetime.getMinutes());
+	}
+
+	/** Formats a (valid) js date repersentation (d-m-y).*/
+	app.formatDate = function formatDate(datetime)
+	{
+		datetime = new Date(datetime);
+		return datetime.getDate() + '-' + (datetime.getMonth() + 1) + '-' + String(datetime.getFullYear()).substr(2);
 	}
 
 	/** Formats OpenTripPlanner modality designations in a more human-readable way. */
@@ -126,11 +157,15 @@
 
 // Register formatting functions for use in templates
 Handlebars.registerHelper('ISOdatetime',  app.formatISODateTime);
-Handlebars.registerHelper('ISOdate',  app.formatISODate);
-Handlebars.registerHelper('ISOtime',  app.formatISOTime);
-Handlebars.registerHelper('duration', app.formatDuration);
-Handlebars.registerHelper('timing',   app.formatTiming);
-Handlebars.registerHelper('distance', app.formatDistance);
-Handlebars.registerHelper('time',     app.formatTime);
-Handlebars.registerHelper('mode',     app.formatMode);
-Handlebars.registerHelper('icon',     app.formatIcon);
+Handlebars.registerHelper('ISOdate',      app.formatISODate);
+Handlebars.registerHelper('ISOtime',      app.formatISOTime);
+Handlebars.registerHelper('LCdatetime',   app.formatLCDateTime);
+Handlebars.registerHelper('LCdate',       app.formatLCDate);
+Handlebars.registerHelper('LCtime',       app.formatLCTime);
+Handlebars.registerHelper('duration',     app.formatDuration);
+Handlebars.registerHelper('timing',       app.formatTiming);
+Handlebars.registerHelper('distance',     app.formatDistance);
+Handlebars.registerHelper('date',         app.formatDate);
+Handlebars.registerHelper('time',         app.formatTime);
+Handlebars.registerHelper('mode',         app.formatMode);
+Handlebars.registerHelper('icon',         app.formatIcon);
