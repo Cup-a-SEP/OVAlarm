@@ -82,7 +82,6 @@
 		// Set background service for alarms
 		var nextAlarm = app.storage.alarms[0];
 		console.log('Setting background alarm:');
-		console.log(JSON.stringify(nextAlarm));
 		setBackgroundAlarm(nextAlarm.time / 1000, "OV-Alarm", nextAlarm.type);
 
 		//TODO: what does this line do?:
