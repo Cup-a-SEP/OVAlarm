@@ -37,7 +37,7 @@
 
 
 <script type="text/x-handlebars-template" id="tpl:alarmButton">
-	<button class="alarm{{#if alarm}} set label label-primary{{/if}} btn btn-xs btn-link pull-right" data-id="{{#if arrival}}a{{else}}d{{/if}}{{index}}">
+	<button class="alarm{{#if alarm}} set label label-primary{{/if}} btn btn-link pull-right" data-id="{{#if arrival}}a{{else}}d{{/if}}{{index}}">
 		<!--<i class="glyphicon glyphicon-time"></i> -->
 		alarm <span class="alarm-content">{{~#if alarm}}{{duration alarm}}{{else}}+{{/if~}}</span>
 	</button>
@@ -53,8 +53,8 @@
 				</div>
 				<div class="col-xs-5">
 					<div class="btn-group pull-right">
-						<button id="remove" class="btn btn-danger btn-xs">Remove</button>
-						<button id="alarm-done" class="btn btn-default btn-xs">Done</button>
+						<button id="remove" class="btn btn-danger">Remove</button>
+						<button id="alarm-done" class="btn btn-default">Done</button>
 					</div>
 				</div>
 			</div>
