@@ -6,11 +6,25 @@
 	}
 
 	/** Formats a (valid) js date repersentation to: yyyy-mm-ddThh:mm (used by html5 date input)*/
-	app.formatISODate = function formatISODate(datetime)
+	app.formatISODateTime = function formatISODateTime(datetime)
 	{
 		if (!datetime)
 			return '';
 		return new Date(datetime).toISOString().match(/^[^:]*:[^:]*/)[0];
+	}
+
+	/** Formats a (valid) js date repersentation to: yyyy-mm-dd (used by html5 date input)*/
+	app.formatISODate = function formatISODate(datetime)
+	{
+		datetime = new Date(datetime);
+		return datetime.getFullYear() + '-' + pad(datetime.getMonth() + 1) + '-' + pad(datetime.getDate());
+	}
+
+	/** Formats a (valid) js date repersentation to: hh:mm (used by html5 time input)*/
+	app.formatISOTime = function formatISOTime(datetime)
+	{
+		datetime = new Date(datetime);
+		return pad(datetime.getHours()) + ':' + pad(datetime.getMinutes());
 	}
 
 	/** Formats a duration in seconds in a more human-readable way. */
@@ -111,7 +125,9 @@
 })(jQuery, window.app = window.app || {})
 
 // Register formatting functions for use in templates
-Handlebars.registerHelper('ISOtime',  app.formatISODate);
+Handlebars.registerHelper('ISOdatetime',  app.formatISODateTime);
+Handlebars.registerHelper('ISOdate',  app.formatISODate);
+Handlebars.registerHelper('ISOtime',  app.formatISOTime);
 Handlebars.registerHelper('duration', app.formatDuration);
 Handlebars.registerHelper('timing',   app.formatTiming);
 Handlebars.registerHelper('distance', app.formatDistance);
