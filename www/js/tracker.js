@@ -184,7 +184,7 @@
             {
                 var button = $('.alarm[data-id=' + id + ']');
                 $('#alarm-setting')
-                    .css('top', button.offset().top + button.outerHeight());
+                    .css('top', Math.min(button.position().top + button.outerHeight(), app.page.innerHeight()));
 
                 $('#remove').click(function()
                 {
