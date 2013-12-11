@@ -24,7 +24,7 @@
 			</div>
 		</div>
 	{{else}}
-		<h3 id="feedback">{{#if error}}{{error}}{{else}}No route found.{{/if}}</h3>
+		<div class="alert alert-danger" id="feedback">{{#if error}}{{error}}{{else}}No route found.{{/if}}</div>
 	{{/each}}
 	</section>
 </script>
