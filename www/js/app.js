@@ -57,6 +57,12 @@
 		})
 	}
 
+	/** Returns true when app is executed on a device (false for pc browser). */
+	app.onDevice = function onDevice()
+	{
+		return navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/);
+	}
+
 
 	/** Persistent storage for the app (WARNING: supports only core types) */
 	app.storage = {};
@@ -86,8 +92,8 @@
 
 		//TODO: what does this line do?:
 		$(document).trigger('appexit');
-		
-		('app' in navigator ? navigator.app.exitApp : function exitApp()
+
+		(app.onDevice() ? navigator.app.exitApp : function exitApp()
 		{
 			// Fallback when app is simulated in a browser
 			app.page

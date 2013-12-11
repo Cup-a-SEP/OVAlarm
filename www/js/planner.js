@@ -101,7 +101,7 @@
 			app.loader.hide();
 		}).fail(function(errorCode, errorMessage)
 		{
-			planner.showError(errorMessage /*debug:*/ + ' (' + errorCode + ')');
+			planner.showError(errorMessage /*debug:* / + ' (' + errorCode + ')'/**/);
 			app.loader.hide();
 		});
 	};
@@ -165,7 +165,7 @@
 			out.distance += it.legs[i].distance;
 
 			// Strip walk legs, those are not interesting
-			if (it.legs[i].mode == 'WALK')
+			if (it.legs[i].mode == 'WALK' && i && i < it.legs.length - 1)
 				continue;
 
 			// Start place
@@ -216,7 +216,7 @@
 		var options = {
 			serviceUrl: "http://ovh.openkvk.nl:8888/",
 			paramName: "noparam", // FIXME: NEWBAGHACK: Hack as the above API doesn't work with data params
-			maxHeight: '310',
+			maxHeight: '350',
 			transformResult: function (response, originalQuery) {
 				var result = {};
 				var sug;

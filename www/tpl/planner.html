@@ -2,26 +2,26 @@
 	<form id="planner" role="form">
 		<div class="form-group">
 			<h4 class="text-center">New trip</h4>
-			<button id="done" class="btn btn-link pull-right">Done</button>
+			<button id="done" class="btn btn-link btn-lg pull-right">Done</button>
 		</div>
 
 		<div class="form-group">
-			<input type="text" id="from" class="form-control" name="from" value="{{from}}" data-coord="{{fromCoord}}" placeholder="From">
+			<input type="text" id="from" class="form-control input-lg" name="from" value="{{from}}" data-coord="{{fromCoord}}" placeholder="From">
 		</div>
 		<div class="form-group">
-			<input type="text" id="to" class="form-control" name="to" value="{{to}}" data-coord="{{toCoord}}" placeholder="To">
+			<input type="text" id="to" class="form-control input-lg" name="to" value="{{to}}" data-coord="{{toCoord}}" placeholder="To">
 		</div>
 
 		<div class="form-group container">
 			<div class="row">
 				<div class="col-xs-8">
-					<input type="datetime-local" id="when" class="form-control" name="when" value="{{ISOtime when}}">
+					<input type="datetime-local" id="when" class="form-control input-lg" name="when" value="{{ISOdatetime when}}">
 				</div>
 				<div class="col-xs-4">
-					<label for="arrive" class="radio-inline arrdep {{#if arrive}}active{{/if}}">Arrive
+					<label for="arrive" class="radio-inline input-lg arrdep {{#if arrive}}active{{/if}}">Arrive
 						<input type="radio" id="arrive" class="form-control" name="arrdep" value="arrive" {{#if arrive}}checked{{/if}}>
 					</label>
-					<label for="depart" class="radio-inline arrdep {{#unless arrive}}active{{/unless}}">Depart
+					<label for="depart" class="radio-inline input-lg arrdep {{#unless arrive}}active{{/unless}}">Depart
 						<input type="radio" id="depart" class="form-control" name="arrdep" value="depart" {{#unless arrive}}checked{{/unless}}>
 					</label>
 				</div>
@@ -29,7 +29,9 @@
 		</div>
 
 		<div class="form-group">
-			<input type='submit' id="plan" class="btn btn-primary btn-block" value="Plan trip" />
+			<button type='submit' id="plan" class="btn btn-primary btn-block btn-lg" >
+				<i class="glyphicon glyphicon-search"></i> Search trips
+			</button>
 		</div>
 
 		<div class="tooltip-arrow-line"><div class="arrow"></div></div>
