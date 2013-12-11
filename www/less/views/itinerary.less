@@ -103,13 +103,16 @@ section#itinerary {
     }
 
 	button.alarm {
-		margin-top: 5px;
+		margin-top: -5px;
 		margin-right: 5px;
 		color: rgb(167, 160, 154) !important;
 		&.set {
 			.label();
 			.label-primary();
 			color:white !important;
+			margin-top:5px;
+			font-size:100%;
+			font-weight: normal;
 			text-decoration: none;
 			&:after { content: " before"; }
 		}
@@ -127,5 +130,21 @@ section#itinerary {
 	input[type="range"] {
 		width: 100%;
 		margin:5px 0;
+	}
+	.slider-label {
+		font-size: 12px;
+		margin: 0 6px;
+	}
+
+	input[type='range']{
+    	background: rgb(184, 178, 173);
+    	height:10px;
+	}
+
+	input[type='range']::-webkit-slider-thumb {
+	    background:@mainhighlightcolor;
+	    height:30px;
+	    width:30px;
+	    border-radius: 30px;
 	}
 }

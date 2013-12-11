@@ -132,7 +132,7 @@
         var leg = Number(id.slice(1));
         var type = id[0] == 'd' ? 'departure' : 'arrival';
         var alarm = app.findAlarm(leg, type);
-        var delay = 600; // Defaults (10 minutes)
+        var delay = 60; // Defaults (1 minute)
 
         if (!alarm)
         {
