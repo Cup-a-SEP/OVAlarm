@@ -79,7 +79,15 @@
 	/** Closes the app. */
 	app.exitApp = function exitApp()
 	{
+		// Set background service for alarms
+		var nextAlarm = app.storage.alarms[0];
+		console.log('Setting background alarm:');
+		console.log(JSON.stringify(nextAlarm));
+		setBackgroundAlarm(nextAlarm.time / 1000, "OV-Alarm", nextAlarm.type);
+
+		//TODO: what does this line do?:
 		$(document).trigger('appexit');
+		
 		('app' in navigator ? navigator.app.exitApp : function exitApp()
 		{
 			// Fallback when app is simulated in a browser
@@ -91,7 +99,7 @@
 				.append($('<h1>').text('App has been closed'))
 				.append($('<h4>').text('Press <F5> to restart the app.'));
 		})();
-	}
+	};
 
 	/** Saves page history (for use of the back button in android). */
 	app.history = [];
